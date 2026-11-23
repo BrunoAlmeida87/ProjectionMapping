@@ -1,0 +1,15 @@
+{
+  "name": "luzmap-projection-mapping",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "description": "Plataforma web gratuita de projection mapping (HTML5 + WebGL). Não precisa de build: publique a raiz no GitHub Pages.",
+  "scripts": {
+    "serve": "node tools/serve.mjs",
+    "test": "node --test tests/mapping.test.mjs",
+    "test:e2e": "node tests/e2e.mjs",
+    "demo-video": "node tools/make-demo-video.mjs",
+    "screenshots": "node tools/screenshots.mjs"
+  },
+  "license": "MIT"
+}

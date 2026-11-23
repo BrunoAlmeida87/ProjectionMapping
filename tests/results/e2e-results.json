@@ -1,0 +1,256 @@
+{
+  "date": "2026-11-23T23:54:50.801Z",
+  "browser": "Chromium (Playwright, headless, SwiftShader)",
+  "results": [
+    {
+      "name": "carrega sem backend, sem erros no console e sem recursos 404",
+      "ok": true,
+      "ms": 831
+    },
+    {
+      "name": "todos os caminhos são relativos (funciona sob /ProjectionMapping/)",
+      "ok": true,
+      "ms": 2
+    },
+    {
+      "name": "cria superfícies: retângulo, quadrilátero, triângulo, polígono, círculo, elipse, malha e máscara",
+      "ok": true,
+      "ms": 2971
+    },
+    {
+      "name": "arrasta um vértice sem mover os outros",
+      "ok": true,
+      "ms": 257
+    },
+    {
+      "name": "ajuste fino por teclado (setas) e campos numéricos",
+      "ok": true,
+      "ms": 64
+    },
+    {
+      "name": "desfazer / refazer",
+      "ok": true,
+      "ms": 388
+    },
+    {
+      "name": "correção de perspectiva real (homografia): marcadores seguem a projeção",
+      "ok": true,
+      "ms": 118
+    },
+    {
+      "name": "máscaras ocultam o que está abaixo (normal e invertida)",
+      "ok": true,
+      "ms": 503
+    },
+    {
+      "name": "efeitos animados na GPU (frames diferentes ao longo do tempo) e múltiplas superfícies simultâneas",
+      "ok": true,
+      "ms": 1153
+    },
+    {
+      "name": "todos os 23 efeitos compilam (WebGL)",
+      "ok": true,
+      "ms": 609
+    },
+    {
+      "name": "importa imagem (PNG) e projeta na superfície",
+      "ok": true,
+      "ms": 965
+    },
+    {
+      "name": "importa vídeo (WebM) e reproduz em loop sincronizado à timeline",
+      "ok": true,
+      "ms": 1412
+    },
+    {
+      "name": "MP4 H.264: suporte depende do navegador (informado, sem falha silenciosa)",
+      "ok": true,
+      "ms": 392
+    },
+    {
+      "name": "importa GIF (animado quando o navegador tem ImageDecoder)",
+      "ok": true,
+      "ms": 223
+    },
+    {
+      "name": "salva no IndexedDB e recupera a sessão após recarregar",
+      "ok": true,
+      "ms": 1958
+    },
+    {
+      "name": "exporta e importa projeto em JSON",
+      "ok": true,
+      "ms": 818
+    },
+    {
+      "name": "projeto importado sem a mídia indica que é preciso reimportar",
+      "ok": true,
+      "ms": 31
+    },
+    {
+      "name": "janela de saída do projetor abre, sincroniza e não mostra interface",
+      "ok": true,
+      "ms": 855
+    },
+    {
+      "name": "saída limpa na mesma tela esconde toda a interface",
+      "ok": true,
+      "ms": 824
+    },
+    {
+      "name": "calibração: padrões de teste, contornos e assistente de 6 passos",
+      "ok": true,
+      "ms": 2072
+    },
+    {
+      "name": "modo DEMO executa as 7 cenas residenciais",
+      "ok": true,
+      "ms": 4204
+    },
+    {
+      "name": "grava a saída em vídeo (MediaRecorder) quando suportado",
+      "ok": true,
+      "ms": 2382
+    },
+    {
+      "name": "sai da demo e restaura o projeto anterior",
+      "ok": true,
+      "ms": 228
+    },
+    {
+      "name": "sem erros críticos no console durante toda a sessão desktop",
+      "ok": true,
+      "ms": 0
+    },
+    {
+      "name": "Notebook 1366×768: sem sobreposição/rolagem e controles principais visíveis",
+      "ok": true,
+      "ms": 417
+    },
+    {
+      "name": "Monitor Full HD 1920×1080: sem sobreposição/rolagem e controles principais visíveis",
+      "ok": true,
+      "ms": 336
+    },
+    {
+      "name": "iPad Pro 11 vertical: sem sobreposição/rolagem e controles principais visíveis",
+      "ok": true,
+      "ms": 399
+    },
+    {
+      "name": "iPad Pro 11 horizontal: sem sobreposição/rolagem e controles principais visíveis",
+      "ok": true,
+      "ms": 388
+    },
+    {
+      "name": "Galaxy Tab S4: sem sobreposição/rolagem e controles principais visíveis",
+      "ok": true,
+      "ms": 355
+    },
+    {
+      "name": "layout responsivo sem rolagem horizontal e com controles acessíveis",
+      "ok": true,
+      "ms": 65
+    },
+    {
+      "name": "toque seleciona superfície e arrasta o vértice com o dedo",
+      "ok": true,
+      "ms": 1889
+    },
+    {
+      "name": "pinça faz zoom sem editar a geometria",
+      "ok": true,
+      "ms": 698
+    },
+    {
+      "name": "painéis deslizantes abrem e fecham",
+      "ok": true,
+      "ms": 2497
+    },
+    {
+      "name": "demo funciona no celular",
+      "ok": true,
+      "ms": 1667
+    },
+    {
+      "name": "saída limpa no celular + limitações informadas",
+      "ok": true,
+      "ms": 446
+    },
+    {
+      "name": "sem erros no console",
+      "ok": true,
+      "ms": 1
+    },
+    {
+      "name": "layout responsivo sem rolagem horizontal e com controles acessíveis",
+      "ok": true,
+      "ms": 82
+    },
+    {
+      "name": "toque seleciona superfície e arrasta o vértice com o dedo",
+      "ok": true,
+      "ms": 1394
+    },
+    {
+      "name": "pinça faz zoom sem editar a geometria",
+      "ok": true,
+      "ms": 602
+    },
+    {
+      "name": "painéis deslizantes abrem e fecham",
+      "ok": true,
+      "ms": 2772
+    },
+    {
+      "name": "demo funciona no celular",
+      "ok": true,
+      "ms": 1707
+    },
+    {
+      "name": "saída limpa no celular + limitações informadas",
+      "ok": true,
+      "ms": 419
+    },
+    {
+      "name": "sem erros no console",
+      "ok": true,
+      "ms": 0
+    },
+    {
+      "name": "layout responsivo sem rolagem horizontal e com controles acessíveis",
+      "ok": true,
+      "ms": 49
+    },
+    {
+      "name": "toque seleciona superfície e arrasta o vértice com o dedo",
+      "ok": true,
+      "ms": 1418
+    },
+    {
+      "name": "pinça faz zoom sem editar a geometria",
+      "ok": true,
+      "ms": 655
+    },
+    {
+      "name": "painéis deslizantes abrem e fecham",
+      "ok": true,
+      "ms": 2615
+    },
+    {
+      "name": "demo funciona no celular",
+      "ok": true,
+      "ms": 1600
+    },
+    {
+      "name": "saída limpa no celular + limitações informadas",
+      "ok": true,
+      "ms": 443
+    },
+    {
+      "name": "sem erros no console",
+      "ok": true,
+      "ms": 0
+    }
+  ]
+}

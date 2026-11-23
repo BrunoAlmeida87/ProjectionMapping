@@ -1,0 +1,162 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>LuzMap — Projection Mapping no navegador</title>
+  <meta name="description" content="Plataforma gratuita de projection mapping no navegador: mapeie paredes, portas, armários e objetos com efeitos animados, imagens e vídeos. Funciona no computador e no celular.">
+  <meta name="theme-color" content="#0b0d12">
+  <meta name="color-scheme" content="dark">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="LuzMap">
+  <meta property="og:title" content="LuzMap — Projection Mapping no navegador">
+  <meta property="og:description" content="Transforme paredes e objetos em superfícies animadas. Grátis, sem cadastro.">
+  <meta property="og:image" content="assets/screenshots/desktop-demo.jpg">
+  <link rel="manifest" href="manifest.webmanifest">
+  <link rel="icon" href="assets/icons/icon.svg" type="image/svg+xml">
+  <link rel="icon" href="assets/icons/icon-192.png" sizes="192x192" type="image/png">
+  <link rel="apple-touch-icon" href="assets/icons/apple-touch-icon.png">
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="modulepreload" href="js/app.js">
+</head>
+<body>
+  <noscript><div class="fatal">O LuzMap precisa de JavaScript ativado.</div></noscript>
+
+  <div id="app">
+    <!-- ======================= TOP BAR ======================= -->
+    <header class="topbar">
+      <div class="brand">
+        <img src="assets/icons/icon.svg" alt="" width="28" height="28">
+        <span class="brand-name">Luz<b>Map</b></span>
+      </div>
+      <button id="project-title" class="project-title" type="button" title="Projetos (Ctrl+O)">
+        <span class="project-name">Projeto</span>
+        <span id="save-state" class="save-state ok">Salvo</span>
+      </button>
+      <div class="tb-group hide-mobile">
+        <button id="btn-undo" class="btn icon-only" type="button" title="Desfazer (Ctrl+Z)" aria-label="Desfazer" data-icon="undo" disabled></button>
+        <button id="btn-redo" class="btn icon-only" type="button" title="Refazer (Ctrl+Shift+Z)" aria-label="Refazer" data-icon="redo" disabled></button>
+      </div>
+      <span class="spacer"></span>
+      <button id="btn-demo" class="btn demo-btn" type="button" data-icon="sparkles" title="DEMO — Experimentar projection mapping"><span class="lbl"><span class="hide-mobile">DEMO — Experimentar projection mapping</span><span class="show-mobile">DEMO</span></span></button>
+      <button id="btn-rec-demo" class="btn hide-tablet collapse-lbl" type="button" data-icon="record" title="Grava a demonstração completa em vídeo"><span class="lbl">GRAVAR DEMONSTRAÇÃO</span></button>
+      <button id="btn-watch" class="btn hide-tablet collapse-lbl" type="button" data-icon="film" title="Assistir ao vídeo de demonstração"><span class="lbl">Assistir demonstração</span></button>
+      <div class="tb-group">
+        <button id="btn-calibrate" class="btn hide-mobile collapse-lbl" type="button" data-icon="wand" title="Calibração e assistente"><span class="lbl">Calibrar</span></button>
+        <button id="btn-output" class="btn primary" type="button" data-icon="projector" title="Saída para o projetor (O)"><span class="lbl hide-mobile">Saída do projetor</span></button>
+        <button id="btn-blackout" class="btn icon-only hide-mobile" type="button" data-icon="sun" title="Blackout: deixa a saída do projetor preta (B)" aria-label="Blackout"></button>
+        <button id="btn-record" class="btn icon-only hide-mobile" type="button" data-icon="video" title="Gravar vídeo da composição" aria-label="Gravar vídeo"></button>
+      </div>
+      <div class="tb-group">
+        <button class="btn icon-only show-mobile m-undo" type="button" data-icon="undo" aria-label="Desfazer" disabled></button>
+        <button class="btn icon-only show-mobile m-redo" type="button" data-icon="redo" aria-label="Refazer" disabled></button>
+        <button class="btn icon-only show-mobile m-play" type="button" data-icon="pause" aria-label="Reproduzir / pausar"></button>
+        <button id="btn-projects" class="btn icon-only hide-mobile" type="button" data-icon="folder" title="Projetos (Ctrl+O)" aria-label="Projetos"></button>
+        <button id="btn-install" class="btn icon-only hide-mobile" type="button" data-icon="phone" title="Instalar como app" aria-label="Instalar" hidden></button>
+        <button id="btn-help" class="btn icon-only hide-mobile" type="button" data-icon="help" title="Ajuda e atalhos (?)" aria-label="Ajuda"></button>
+        <button id="btn-menu" class="btn icon-only" type="button" data-icon="menu" title="Menu" aria-label="Menu"></button>
+      </div>
+      <div class="rec-indicator" role="status">
+        <span class="rec-dot"></span><span>REC</span>
+        <button id="btn-rec-stop" class="btn small danger" type="button" data-icon="stop"><span class="lbl">Parar</span></button>
+      </div>
+    </header>
+
+    <!-- ======================= LEFT PANEL ======================= -->
+    <aside id="left-panel" class="panel left sheet" aria-label="Biblioteca">
+      <div class="sheet-handle" aria-hidden="true"><span></span></div>
+      <nav class="left-tabs" role="tablist">
+        <button type="button" role="tab" data-tab="layers" data-icon="layers"><span>Camadas</span></button>
+        <button type="button" role="tab" data-tab="effects" data-icon="sparkles"><span>Efeitos</span></button>
+        <button type="button" role="tab" data-tab="media" data-icon="image"><span>Mídia</span></button>
+        <button type="button" class="sheet-close show-mobile" aria-label="Fechar painel" data-icon="close"></button>
+      </nav>
+      <section id="panel-layers" class="tab-pane" data-pane="layers"></section>
+      <section id="panel-effects" class="tab-pane" data-pane="effects" hidden></section>
+      <section id="panel-media" class="tab-pane" data-pane="media" hidden></section>
+    </aside>
+
+    <!-- ======================= VIEWPORT ======================= -->
+    <main id="viewport" class="viewport" data-tool="select" aria-label="Editor de projeção">
+      <canvas id="gl" aria-label="Composição"></canvas>
+      <canvas id="overlay" aria-hidden="true"></canvas>
+      <div id="toolbar" class="toolbar" role="toolbar" aria-label="Ferramentas"></div>
+      <div class="view-controls" role="toolbar" aria-label="Vista">
+        <button id="btn-zoom-out" class="vc" type="button" title="Afastar (-)" aria-label="Afastar" data-icon="zoomOut"></button>
+        <button id="btn-fit" class="vc" type="button" title="Enquadrar (0)" aria-label="Enquadrar" data-icon="fit"></button>
+        <button id="btn-zoom-in" class="vc" type="button" title="Aproximar (+)" aria-label="Aproximar" data-icon="zoomIn"></button>
+        <button id="btn-sim" class="vc" type="button" title="Simulação: ver a luz projetada sobre a foto do ambiente" aria-label="Simulação" data-icon="room"></button>
+        <button id="btn-labels" class="vc" type="button" title="Mostrar nomes (L)" aria-label="Nomes" data-icon="info" data-opt="labels"></button>
+      </div>
+      <div id="tool-hint" class="tool-hint" hidden></div>
+      <div id="draft-bar" class="draft-bar" hidden>
+        <span id="draft-text"></span>
+        <button id="draft-undo" class="btn small" type="button" data-icon="undo"><span class="lbl">Ponto</span></button>
+        <button id="draft-done" class="btn small primary" type="button" data-icon="check"><span class="lbl">Concluir</span></button>
+        <button id="draft-cancel" class="btn small ghost" type="button" data-icon="close"><span class="lbl">Cancelar</span></button>
+      </div>
+      <div id="nudge-pad" class="nudge-float" hidden>
+        <button type="button" data-nudge="0,-1" aria-label="Cima" data-icon="up"></button>
+        <button type="button" data-nudge="-1,0" aria-label="Esquerda" data-icon="left"></button>
+        <button type="button" id="nudge-next" aria-label="Próximo vértice" data-icon="target"></button>
+        <button type="button" data-nudge="1,0" aria-label="Direita" data-icon="right"></button>
+        <button type="button" data-nudge="0,1" aria-label="Baixo" data-icon="down"></button>
+        <button type="button" id="nudge-close" aria-label="Fechar ajuste fino" data-icon="close"></button>
+      </div>
+      <button id="clean-exit" class="clean-exit" type="button" hidden data-icon="close"><span class="lbl">Sair da saída limpa</span></button>
+      <div class="drop-hint"><span>Solte para importar</span></div>
+    </main>
+
+    <!-- ======================= INSPECTOR ======================= -->
+    <aside id="inspector" class="panel right sheet" aria-label="Propriedades">
+      <div class="sheet-handle" aria-hidden="true"><span></span></div>
+      <div class="panel-title"><span data-icon="sliders">Propriedades</span><button type="button" class="sheet-close show-mobile" aria-label="Fechar painel" data-icon="close"></button></div>
+      <div id="inspector-body" class="inspector-body"></div>
+    </aside>
+
+    <!-- ======================= TIMELINE ======================= -->
+    <footer id="panel-timeline" class="panel timeline sheet" aria-label="Timeline">
+      <div class="sheet-handle" aria-hidden="true"><span></span></div>
+    </footer>
+
+    <div id="status" class="statusbar" role="status"></div>
+
+    <!-- ======================= MOBILE TAB BAR ======================= -->
+    <nav class="mobile-tabbar" aria-label="Painéis">
+      <button type="button" data-sheet="layers" data-icon="layers"><span>Camadas</span></button>
+      <button type="button" data-sheet="effects" data-icon="sparkles"><span>Efeitos</span></button>
+      <button type="button" data-sheet="media" data-icon="image"><span>Mídia</span></button>
+      <button type="button" data-sheet="props" data-icon="sliders"><span>Ajustes</span></button>
+      <button type="button" data-sheet="timeline" data-icon="film"><span>Timeline</span></button>
+    </nav>
+  </div>
+
+  <div id="fatal" class="fatal" hidden>
+    <h2>Não foi possível iniciar o LuzMap</h2>
+    <p>Atualize a página. Se o problema continuar, use um navegador recente (Chrome, Edge, Firefox ou Safari).</p>
+    <pre></pre>
+  </div>
+
+  <script>
+    // Opening index.html straight from the disk (file://) blocks ES modules.
+    if (location.protocol === 'file:') {
+      document.addEventListener('DOMContentLoaded', function () {
+        var f = document.getElementById('fatal');
+        f.hidden = false;
+        f.querySelector('h2').textContent = 'Abra pelo endereço do GitHub Pages';
+        f.querySelector('p').textContent = 'Por segurança, os navegadores bloqueiam módulos JavaScript abertos direto do disco (file://). Acesse a versão publicada (https://SEU-USUARIO.github.io/ProjectionMapping/) ou sirva a pasta com qualquer servidor estático.';
+      });
+    }
+    window.addEventListener('error', function (e) {
+      if (e && e.message && /Failed to fetch dynamically imported module|Importing a module script failed/.test(e.message)) {
+        var f = document.getElementById('fatal');
+        f.hidden = false;
+        f.querySelector('pre').textContent = e.message;
+      }
+    });
+  </script>
+  <script type="module" src="js/app.js"></script>
+</body>
+</html>

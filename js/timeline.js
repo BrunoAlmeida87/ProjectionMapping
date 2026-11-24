@@ -5,7 +5,7 @@ import { el, clamp, formatTime, uid } from './utils.js';
 import { icon, btn } from './ui.js';
 import { EFFECT_MAP } from './effects.js';
 
-const NAME_W = 150;
+const NAME_W_DEFAULT = 150;
 
 export class TimelinePanel {
   constructor(app, root) {
@@ -40,7 +40,8 @@ export class TimelinePanel {
     this.ruler = el('div.tl-ruler');
     this.rows = el('div.tl-rows');
     this.playhead = el('div.tl-playhead', el('span.tl-head'));
-    this.grid.append(el('div.tl-ruler-row', el('div.tl-corner', 'Camadas'), this.ruler), this.rows, this.playhead);
+    this.corner = el('div.tl-corner', 'Camadas');
+    this.grid.append(el('div.tl-ruler-row', this.corner, this.ruler), this.rows, this.playhead);
     this.scroll.appendChild(this.grid);
     root.append(bar, this.scroll);
 
@@ -67,6 +68,10 @@ export class TimelinePanel {
     this.updateTransport();
   }
 
+  get nameW() {
+    return this.corner?.offsetWidth || NAME_W_DEFAULT;
+  }
+
   get duration() {
     return this.app.store.project.timeline.duration;
   }
@@ -77,16 +82,16 @@ export class TimelinePanel {
 
   zoom(f) {
     this.autoFit = false;
-    const center = this.scroll.scrollLeft + this.scroll.clientWidth / 2 - NAME_W;
+    const center = this.scroll.scrollLeft + this.scroll.clientWidth / 2 - this.nameW;
     const t = center / this.pps;
     this.pps = clamp(this.pps * f, 2, 400);
     this.render();
-    this.scroll.scrollLeft = t * this.pps - this.scroll.clientWidth / 2 + NAME_W;
+    this.scroll.scrollLeft = t * this.pps - this.scroll.clientWidth / 2 + this.nameW;
   }
 
   xToTime(clientX) {
     const r = this.grid.getBoundingClientRect();
-    return clamp((clientX - r.left - NAME_W) / this.pps, 0, this.duration);
+    return clamp((clientX - r.left - this.nameW) / this.pps, 0, this.duration);
   }
 
   updateTransport() {
@@ -102,7 +107,7 @@ export class TimelinePanel {
   tick() {
     const t = this.app.transport.time;
     this.timeEl.textContent = formatTime(t);
-    this.playhead.style.transform = `translateX(${NAME_W + t * this.pps}px)`;
+    this.playhead.style.transform = `translateX(${this.nameW + t * this.pps}px)`;
   }
 
   _bindScrub() {
@@ -126,10 +131,10 @@ export class TimelinePanel {
     const { store } = this.app;
     const dur = this.duration;
     if (this.autoFit) {
-      const w = this.scroll.clientWidth - NAME_W - 16;
+      const w = this.scroll.clientWidth - this.nameW - 16;
       if (w > 40) this.pps = clamp(w / dur, 2, 400);
     }
-    const width = NAME_W + dur * this.pps + 24;
+    const width = this.nameW + dur * this.pps + 24;
     this.grid.style.width = `${width}px`;
     // ruler ticks
     this.ruler.replaceChildren();

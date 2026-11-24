@@ -905,7 +905,7 @@ export class Editor extends Emitter {
     ctx.font = `${isSel ? 600 : 500} 11px system-ui, sans-serif`;
     const w = ctx.measureText(txt).width + 10;
     const x = clamp(b.minX, 2, this.cssW - w - 2);
-    const y = clamp(b.minY - 20, 2, this.cssH - 20);
+    const y = clamp(s.role === 'mask' ? b.maxY + 3 : b.minY - 20, 2, this.cssH - 20);
     ctx.fillStyle = isSel ? 'rgba(34,211,238,0.92)' : s.role === 'mask' ? 'rgba(255,77,109,0.8)' : 'rgba(15,17,24,0.72)';
     ctx.beginPath();
     ctx.roundRect ? ctx.roundRect(x, y, w, 17, 5) : ctx.rect(x, y, w, 17);

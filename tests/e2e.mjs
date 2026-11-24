@@ -485,6 +485,17 @@ const main = async () => {
   });
   await ctx.close();
 
+  await test('PWA: service worker ativo e app abre offline após o primeiro acesso', async () => {
+    const o = await openApp(browser, {}, { url: `http://localhost:${PORT}${BASE}` });
+    await o.page.evaluate(() => navigator.serviceWorker.ready);
+    await o.page.waitForTimeout(1200);
+    assert(await o.page.evaluate(() => !!navigator.serviceWorker.controller), 'service worker não controla a página');
+    await o.ctx.setOffline(true);
+    await o.page.reload();
+    await o.page.waitForFunction(() => window.__luzmap && window.__luzmap.renderer.ok, null, { timeout: 15000 });
+    await o.ctx.close();
+  });
+
   // ------------------------------------------------------------------ other screen sizes
   console.log('\nNotebook, monitor Full HD e tablets (layout)');
   for (const [label, opts] of [

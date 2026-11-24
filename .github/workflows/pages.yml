@@ -39,7 +39,7 @@ jobs:
       - name: Montar a pasta do site (apenas arquivos públicos)
         run: |
           mkdir _site
-          cp -r index.html output.html manifest.webmanifest sw.js .nojekyll css js shaders assets demos _site/
+          cp -r index.html output.html manifest.webmanifest sw.js .nojekyll css js shaders assets demos docs _site/
       - uses: actions/upload-pages-artifact@v3
         with:
           path: _site

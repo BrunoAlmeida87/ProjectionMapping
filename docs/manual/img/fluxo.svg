@@ -1,0 +1,45 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1080 270" font-family="Inter, Arial, sans-serif">
+  <defs>
+    <marker id="a" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#7c5cff"/></marker>
+    <linearGradient id="beam" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#22d3ee" stop-opacity=".7"/><stop offset="1" stop-color="#ff2bd6" stop-opacity=".15"/></linearGradient>
+  </defs>
+  <rect width="1080" height="270" fill="#fff"/>
+  <g font-size="14" fill="#111827">
+    <rect x="10" y="40" width="185" height="150" rx="14" fill="#eef2ff" stroke="#7c5cff" stroke-width="2"/>
+    <rect x="36" y="62" width="133" height="78" rx="6" fill="#0b0d12"/>
+    <path d="M60 128 L84 76 L150 80 L142 130 Z" fill="none" stroke="#22d3ee" stroke-width="2.5"/>
+    <circle cx="84" cy="76" r="4.5" fill="#fbbf24"/>
+    <text x="102" y="165" text-anchor="middle" font-weight="700">1. Editor</text>
+    <text x="102" y="183" text-anchor="middle" font-size="12" fill="#4b5563">você desenha e ajusta</text>
+
+    <rect x="230" y="40" width="185" height="150" rx="14" fill="#ecfeff" stroke="#0891b2" stroke-width="2"/>
+    <rect x="262" y="66" width="120" height="70" rx="8" fill="#0e7490"/>
+    <text x="322" y="98" text-anchor="middle" font-size="18" font-weight="800" fill="#fff">GPU</text>
+    <text x="322" y="120" text-anchor="middle" font-size="11" fill="#cffafe">WebGL + shaders</text>
+    <text x="322" y="165" text-anchor="middle" font-weight="700">2. Composição</text>
+    <text x="322" y="183" text-anchor="middle" font-size="12" fill="#4b5563">perspectiva, máscaras, efeitos</text>
+
+    <rect x="450" y="40" width="185" height="150" rx="14" fill="#f5f3ff" stroke="#7c5cff" stroke-width="2"/>
+    <rect x="476" y="62" width="133" height="78" rx="6" fill="#000"/>
+    <path d="M500 128 L524 76 L590 80 L582 130 Z" fill="#22d3ee" opacity=".85"/>
+    <text x="542" y="165" text-anchor="middle" font-weight="700">3. Saída limpa</text>
+    <text x="542" y="183" text-anchor="middle" font-size="12" fill="#4b5563">só a imagem, fundo preto</text>
+
+    <rect x="670" y="40" width="160" height="150" rx="14" fill="#fdf4ff" stroke="#c026d3" stroke-width="2"/>
+    <rect x="700" y="78" width="100" height="44" rx="10" fill="#374151"/>
+    <circle cx="776" cy="100" r="13" fill="#9ca3af" stroke="#e5e7eb" stroke-width="3"/>
+    <text x="750" y="165" text-anchor="middle" font-weight="700">4. Projetor</text>
+    <text x="750" y="183" text-anchor="middle" font-size="12" fill="#4b5563">HDMI ou espelhamento</text>
+
+    <path d="M820 100 L960 50 L960 168 Z" fill="url(#beam)"/>
+    <rect x="955" y="30" width="110" height="160" rx="6" fill="#e7e2d8" stroke="#9ca3af"/>
+    <rect x="985" y="70" width="52" height="118" fill="#d9d2c4" stroke="#a8a29e"/>
+    <path d="M985 70 h52 v118 h-52 z" fill="#22d3ee" opacity=".55"/>
+    <text x="1010" y="215" text-anchor="middle" font-weight="700">5. Parede / porta</text>
+    <text x="1010" y="233" text-anchor="middle" font-size="12" fill="#4b5563">a luz encaixa no objeto</text>
+  </g>
+  <g stroke="#7c5cff" stroke-width="3" marker-end="url(#a)">
+    <path d="M198 115 h28"/><path d="M418 115 h28"/><path d="M638 115 h28"/>
+  </g>
+  <text x="540" y="258" text-anchor="middle" font-size="13" fill="#6b7280">Tudo acontece no navegador: nenhum arquivo sai do seu dispositivo.</text>
+</svg>

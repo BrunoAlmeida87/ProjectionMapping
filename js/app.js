@@ -24,6 +24,7 @@ import { surfaceOutline, pointInPolygon, rectPoints } from './mapping.js';
 
 const DEMO_VIDEO = 'demos/luzmap-demo.mp4';
 const DEMO_POSTER = 'demos/luzmap-demo-poster.jpg';
+const MANUAL_PDF = 'docs/manual/Manual-LuzMap.pdf';
 
 class App {
   constructor() {
@@ -1149,6 +1150,7 @@ class App {
           el('li', 'Escolha um efeito ou importe uma imagem/vídeo e aplique à superfície.'),
           el('li', 'Use máscaras para não projetar onde não deve. Anime com clipes e keyframes.'),
         ),
+        el('p', 'Guia completo e didático, com figuras: ', el('a', { href: MANUAL_PDF, target: '_blank', rel: 'noopener' }, 'Manual do usuário (PDF)'), '.'),
         el('h3', 'Atalhos de teclado'),
         el('table.keys', keys.map(([k, d]) => el('tr', el('td', el('kbd', k)), el('td', d)))),
         el('h3', 'Recursos deste navegador'),
@@ -1329,6 +1331,7 @@ class App {
         item('mic', 'Áudio reativo: usar microfone', () => this.useMicrophone()),
         item('phone', 'Instalar como app', () => this.installApp()),
         item('help', 'Ajuda, atalhos e compatibilidade', () => this.showHelp()),
+        item('info', 'Manual do usuário (PDF)', () => window.open(MANUAL_PDF, '_blank', 'noopener')),
       ),
     });
   }

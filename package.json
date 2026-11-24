@@ -9,7 +9,8 @@
     "test": "node --test tests/mapping.test.mjs",
     "test:e2e": "node tests/e2e.mjs",
     "demo-video": "node tools/make-demo-video.mjs",
-    "screenshots": "node tools/screenshots.mjs"
+    "screenshots": "node tools/screenshots.mjs",
+    "manual": "node tools/manual-shots.mjs && node tools/make-manual.mjs"
   },
   "license": "MIT"
 }

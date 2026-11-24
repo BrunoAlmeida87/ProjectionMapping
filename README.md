@@ -7,6 +7,8 @@ Plataforma **gratuita** de *projection mapping* que roda inteira no navegador (H
 
 ![Demonstração automática: sala com parede, porta, armário, estante, mesa e piso mapeados](assets/screenshots/desktop-demo.jpg)
 
+**📘 Manual do usuário (40 páginas, didático, com figuras):** [`docs/manual/Manual-LuzMap.pdf`](docs/manual/Manual-LuzMap.pdf) · versão para ler no GitHub: [`docs/manual/MANUAL.md`](docs/manual/MANUAL.md). Também abre pelo menu do app → **Manual do usuário (PDF)**.
+
 **▶ Vídeo de demonstração real (77 s):** [`demos/luzmap-demo.mp4`](demos/luzmap-demo.mp4) · [WebM](demos/luzmap-demo.webm) — também disponível no próprio site pelo botão **“Assistir demonstração”**.
 
 ---
@@ -216,8 +218,9 @@ js/demo.js + room.js  demo residencial (sala 3D projetada em perspectiva)
 js/audio.js           áudio reativo                js/presets.js  presets
 js/capabilities.js    detecção de recursos e perfil de qualidade
 demos/                vídeo de demonstração + projeto de exemplo (JSON)
+docs/manual/          manual do usuário (MANUAL.md + PDF + figuras)
 tests/                testes de unidade (Node) e E2E (Playwright)
-tools/                servidor local, gerador de vídeo, capturas e ícones (só desenvolvimento)
+tools/                servidor local, gerador de vídeo, capturas, manual em PDF e ícones (só desenvolvimento)
 ```
 
 **Como a perspectiva é feita:** para cada quadrilátero calcula-se a homografia *H* que leva o quadrado unitário de textura aos 4 cantos na saída. Cada vértice recebe `(U,V,W) = H⁻¹·(x,y,1)`, que é **linear no espaço da tela**; a GPU interpola linearmente e o fragment shader divide `U/W, V/W`, reproduzindo exatamente a projeção (o teste E2E confirma que o centro da textura cai no cruzamento das diagonais, o que uma interpolação bilinear não faz). Malhas usam uma homografia por célula; triângulos usam mapeamento afim; polígonos usam projeção planar com triangulação *ear clipping*.

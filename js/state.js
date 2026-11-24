@@ -71,35 +71,114 @@ export function mediaContent(mediaId) {
   return { type: 'media', mediaId };
 }
 
-/** Fills missing fields so imported / older projects always render. */
+const VALID_TYPES = new Set(['rect', 'quad', 'triangle', 'polygon', 'circle', 'ellipse', 'mesh']);
+const VALID_BLEND = new Set(['normal', 'add', 'screen', 'multiply']);
+const num = (v, def, lo = -Infinity, hi = Infinity) => (Number.isFinite(+v) ? clamp(+v, lo, hi) : def);
+
+function cleanContent(c) {
+  if (!c || typeof c !== 'object') return effectContent('grid');
+  if (c.type === 'none') return { type: 'none' };
+  if (c.type === 'media') return typeof c.mediaId === 'string' ? { type: 'media', mediaId: c.mediaId } : { type: 'none' };
+  if (c.type === 'effect' && EFFECT_MAP[c.effect]) {
+    const params = {};
+    for (const [k, v] of Object.entries(c.params && typeof c.params === 'object' ? c.params : {})) {
+      if (typeof v === 'number' && Number.isFinite(v)) params[k] = v;
+      else if (typeof v === 'string' && /^#[0-9a-f]{3,8}$/i.test(v)) params[k] = v;
+    }
+    return effectContent(c.effect, params);
+  }
+  return effectContent('grid');
+}
+
+function cleanClips(clips) {
+  if (!Array.isArray(clips)) return [];
+  return clips
+    .filter((c) => c && Number.isFinite(+c.start) && Number.isFinite(+c.end) && +c.end > +c.start)
+    .map((c) => ({
+      id: typeof c.id === 'string' ? c.id : uid('c'),
+      start: Math.max(0, +c.start),
+      end: +c.end,
+      fadeIn: num(c.fadeIn, 0, 0, 60),
+      fadeOut: num(c.fadeOut, 0, 0, 60),
+      content: cleanContent(c.content),
+    }));
+}
+
+function cleanKeys(keys) {
+  const out = {};
+  if (!keys || typeof keys !== 'object') return out;
+  for (const prop of ['opacity', 'x', 'y', 'scale', 'rotation', 'intensity']) {
+    const tr = keys[prop];
+    if (!Array.isArray(tr)) continue;
+    const list = tr
+      .filter((k) => k && Number.isFinite(+k.t) && Number.isFinite(+k.v))
+      .map((k) => ({ t: Math.max(0, +k.t), v: +k.v, e: ['linear', 'ease', 'in', 'out', 'hold'].includes(k.e) ? k.e : 'ease' }))
+      .sort((a, b) => a.t - b.t);
+    if (list.length) out[prop] = list;
+  }
+  return out;
+}
+
+/** Fills missing fields and discards invalid data so imported / older projects always render. */
 export function normalizeProject(p) {
-  const base = createProject({ id: p.id, name: p.name });
+  if (!p || typeof p !== 'object') p = {};
+  const base = createProject({ id: typeof p.id === 'string' ? p.id : undefined, name: typeof p.name === 'string' ? p.name : undefined });
   const out = { ...base, ...p };
+  out.id = base.id;
+  out.version = PROJECT_VERSION;
   out.output = { ...base.output, ...(p.output || {}) };
   out.output.width = clamp(Math.round(+out.output.width || 1920), 64, 8192);
   out.output.height = clamp(Math.round(+out.output.height || 1080), 64, 8192);
   out.background = { ...base.background, ...(p.background || {}) };
   out.audio = { ...base.audio, ...(p.audio || {}) };
   out.timeline = { ...base.timeline, ...(p.timeline || {}) };
-  out.media = p.media && typeof p.media === 'object' ? p.media : {};
+  out.timeline.duration = num(out.timeline.duration, 30, 0.5, 3600);
+  out.timeline.loop = out.timeline.loop !== false;
+  out.background.opacity = num(out.background.opacity, 0.55, 0, 1);
+  out.media = p.media && typeof p.media === 'object' && !Array.isArray(p.media) ? p.media : {};
+  out.name = typeof out.name === 'string' && out.name.trim() ? out.name.slice(0, 120) : base.name;
   out.surfaces = (Array.isArray(p.surfaces) ? p.surfaces : [])
-    .filter((s) => s && validPoints(s.points))
+    .filter((s) => s && typeof s === 'object' && validPoints(s.points))
     .map((s) => {
-      const d = createSurface(s.type || 'polygon', s.points, { role: s.role });
-      const n = { ...d, ...s };
-      n.transform = { ...d.transform, ...(s.transform || {}) };
-      n.adjust = { ...d.adjust, ...(s.adjust || {}) };
-      n.clips = Array.isArray(s.clips) ? s.clips : [];
-      n.keys = s.keys && typeof s.keys === 'object' ? s.keys : {};
-      if (n.type === 'mesh') {
-        n.mesh = { cols: 3, rows: 3, ...(s.mesh || {}) };
-        if (n.points.length !== (n.mesh.cols + 1) * (n.mesh.rows + 1)) {
+      const type = VALID_TYPES.has(s.type) ? s.type : 'polygon';
+      const pts = s.points.slice(0, type === 'polygon' ? 48 : 500).map((q) => [+q[0], +q[1]]);
+      const d = createSurface(type, pts, { role: s.role === 'mask' ? 'mask' : 'content' });
+      const n = { ...d, ...s, type, points: pts, role: d.role };
+      if (typeof s.id === 'string') n.id = s.id;
+      n.name = typeof s.name === 'string' && s.name.trim() ? s.name.slice(0, 80) : d.name;
+      n.visible = s.visible !== false;
+      n.locked = !!s.locked;
+      n.invert = !!s.invert;
+      n.opacity = num(s.opacity, 1, 0, 1);
+      n.feather = num(s.feather, 0, 0, 500);
+      n.rotation = num(s.rotation, 0, -3600, 3600);
+      n.audioReact = num(s.audioReact, 0, 0, 2);
+      n.blend = VALID_BLEND.has(s.blend) ? s.blend : 'normal';
+      n.transform = { ...d.transform, ...(s.transform && typeof s.transform === 'object' ? s.transform : {}) };
+      n.transform.scale = num(n.transform.scale, 1, 0.01, 50);
+      for (const k of ['x', 'y', 'rotation']) n.transform[k] = num(n.transform[k], 0);
+      n.adjust = { ...d.adjust, ...(s.adjust && typeof s.adjust === 'object' ? s.adjust : {}) };
+      n.adjust.brightness = num(n.adjust.brightness, 0, -1, 1);
+      n.adjust.contrast = num(n.adjust.contrast, 1, 0, 5);
+      n.adjust.saturation = num(n.adjust.saturation, 1, 0, 5);
+      n.adjust.hue = num(n.adjust.hue, 0, -360, 360);
+      n.clips = cleanClips(s.clips);
+      n.keys = cleanKeys(s.keys);
+      n.content = cleanContent(s.content);
+      if ((type === 'quad' || type === 'rect' || type === 'circle' || type === 'ellipse') && pts.length !== 4) {
+        n.type = 'polygon';
+      } else if (type === 'triangle' && pts.length !== 3) {
+        n.type = 'polygon';
+      } else if (type === 'mesh') {
+        const cols = Math.round(num(s.mesh?.cols, 3, 1, 12));
+        const rows = Math.round(num(s.mesh?.rows, 3, 1, 12));
+        n.mesh = { cols, rows };
+        if (pts.length !== (cols + 1) * (rows + 1)) {
           n.mesh = { cols: 1, rows: 1 };
-          n.points = meshFromQuad(n.points.slice(0, 4), 1, 1);
+          n.points = meshFromQuad(pts.slice(0, 4).length === 4 ? pts.slice(0, 4) : rectPoints(0.25, 0.25, 0.5, 0.5), 1, 1);
         }
       }
-      if (!n.content || !n.content.type) n.content = effectContent('grid');
-      if (n.content.type === 'effect' && !EFFECT_MAP[n.content.effect]) n.content = effectContent('grid');
+      if (n.type !== 'mesh') delete n.mesh;
       return n;
     });
   return out;

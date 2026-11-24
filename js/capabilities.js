@@ -47,6 +47,12 @@ export function detectCapabilities(renderer) {
     { id: 'gif', label: 'GIF animado', ok: typeof window.ImageDecoder !== 'undefined', note: typeof window.ImageDecoder !== 'undefined' ? 'ImageDecoder (WebCodecs).' : 'GIFs serão exibidos como imagem estática neste navegador.' },
     { id: 'mic', label: 'Áudio reativo (microfone)', ok: !!navigator.mediaDevices?.getUserMedia, note: 'Requer permissão.' },
     { id: 'sw', label: 'Uso offline / instalar como app (PWA)', ok: 'serviceWorker' in navigator && window.isSecureContext, note: window.isSecureContext ? 'Disponível após o primeiro carregamento.' : 'Requer HTTPS.' },
+    {
+      id: 'installed',
+      label: 'Aplicativo instalado (PWA)',
+      ok: isStandalone(),
+      note: isStandalone() ? 'Rodando como aplicativo instalado.' : 'Pode ser instalado: menu → Instalar como aplicativo (Android, iPhone, PC).',
+    },
     { id: 'touch', label: 'Toque / caneta', ok: navigator.maxTouchPoints > 0, note: navigator.maxTouchPoints > 0 ? `${navigator.maxTouchPoints} pontos de toque` : 'Mouse e teclado' },
   ];
   return list;

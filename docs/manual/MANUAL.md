@@ -6,7 +6,7 @@ Este manual ensina a usar cada parte do LuzMap e mostra como o sistema funciona 
 
 - **Endereço do aplicativo:** https://brunoalmeida87.github.io/ProjectionMapping/
 - **Vídeo de demonstração:** botão **Assistir demonstração** no próprio site ou `demos/luzmap-demo.mp4` no repositório.
-- **Versão do manual:** 1.0 — novembro de 2026.
+- **Versão do manual:** 1.1 — novembro de 2026.
 
 > [!TIP]
 > **Como ler este manual.** Se você tem pressa, leia a Parte 1 (conceitos) e faça o tutorial do capítulo 6. Depois consulte os outros capítulos quando precisar. A Parte 4 é para quem quer entender o código; não é necessária para usar o sistema.
@@ -177,8 +177,9 @@ No celular o LuzMap tem uma interface própria, pensada para o toque:
 - **Ajuste fino:** ao selecionar um vértice aparece um **pad de setas** flutuante; o botão do meio passa para o próximo vértice.
 - **Paisagem (celular deitado):** a barra de painéis vai para a lateral direita e os painéis deslizam do lado, deixando o palco maior.
 - Tocar numa camada da lista abre direto o painel **Ajustes** daquela superfície.
+- O botão **Voltar** do Android (ou o gesto de voltar) fecha o painel ou a janela que estiver aberta.
 
-Para projetar a partir do celular, veja o capítulo 17.
+Para projetar a partir do celular, veja o capítulo 17. Para usar o LuzMap como um aplicativo, com ícone na tela inicial e em tela cheia, veja o capítulo 23.
 
 ---
 
@@ -617,15 +618,45 @@ A barra de status mostra os fps atuais. O LuzMap desenha **só quando algo muda 
 - **Borda suave** em polígonos é mais cara que em quadriláteros;
 - se a placa de vídeo “reiniciar” (perda de contexto WebGL), o LuzMap avisa e recupera a imagem sozinho.
 
-## 23. Instalar como aplicativo e usar offline
+## 23. Instalar como aplicativo (Android, iPhone e computador)
 
-O LuzMap é um **PWA** (aplicativo web progressivo):
+O LuzMap é um **aplicativo web instalável** (PWA): você o instala direto do site, sem loja de aplicativos, sem cadastro e de graça. Instalado, ele ganha:
 
-- **Computador (Chrome/Edge):** menu do navegador → *Instalar LuzMap* (ou o ícone de celular na barra do app, quando aparece).
-- **Android:** menu do Chrome → *Instalar app* / *Adicionar à tela inicial*.
-- **iPhone/iPad:** Safari → Compartilhar → *Adicionar à Tela de Início*.
+- **ícone na tela inicial** (e na gaveta de apps no Android, no menu Iniciar ou no Launchpad no computador);
+- **janela própria, sem as barras do navegador** — no iPhone, é assim que a tela cheia funciona;
+- **funcionamento offline** depois do primeiro acesso;
+- **tela sempre ligada** enquanto a timeline toca ou durante a saída limpa;
+- **atalhos** (no Android e no computador, toque e segure o ícone): *Demonstração*, *Novo projeto* e *Saída do projetor*;
+- **tela de abertura** com o logotipo no iPhone e no iPad.
 
-Depois do primeiro acesso, **o aplicativo abre mesmo sem internet**. Suas mídias já estão no aparelho; só o vídeo de demonstração do site precisa de conexão. Quando houver uma versão nova, aparece o aviso “Nova versão do LuzMap disponível — Atualizar”.
+**Como instalar.** O LuzMap mostra o caminho certo para cada aparelho:
+
+- no celular aparece um aviso discreto **“Instale o LuzMap”** com o botão **Instalar** (feche no × para escondê-lo por duas semanas);
+- a qualquer momento: **Menu → Instalar como aplicativo**, ou a opção na janela de boas-vindas;
+- no computador, quando o navegador permite, aparece também um ícone de celular na barra superior.
+
+Quando o navegador oferece instalação direta (Chrome, Edge e Samsung Internet), o botão abre o diálogo do próprio sistema. Quando não oferece (Safari, Firefox), abre um **guia ilustrado**:
+
+| Aviso no celular | Guia no iPhone / iPad | Guia no Android |
+|---|---|---|
+| ![Aviso de instalação no celular](img/27-instalar-banner.jpg) | ![Guia de instalação no iPhone](img/28-instalar-iphone.jpg) | ![Guia de instalação no Android](img/29-instalar-android.jpg) |
+
+*Figura 26 — Instalação guiada.*
+
+- **iPhone e iPad (Safari):** botão **Compartilhar** (quadrado com seta para cima) → **Adicionar à Tela de Início** → **Adicionar**. Desde o iOS 16.4 o mesmo caminho funciona no Chrome, no Edge e no Firefox do iPhone.
+- **Android (Chrome, Edge, Samsung Internet):** **Instalar** no aviso, ou menu **⋮ → Instalar app**.
+- **Computador (Chrome, Edge):** ícone de instalar na barra de endereço, ou menu **⋮ → Transmitir, salvar e compartilhar → Instalar página como app**. No Safari do Mac: **Arquivo → Adicionar ao Dock**.
+
+> [!IMPORTANT]
+> **iPhone e iPad: o app instalado tem armazenamento separado do Safari.** Os projetos feitos no Safari não aparecem automaticamente no app. Para levar um projeto, use **Projetos → Exportar com mídias** no Safari e **Importar JSON** no app.
+
+**Recursos extras do app instalado:**
+
+- **Compartilhar para o LuzMap (Android):** na galeria ou no gerenciador de arquivos, escolha fotos ou vídeos → **Compartilhar** → **LuzMap**. O app abre e importa os arquivos para a aba **Mídia**.
+- **Abrir arquivos (computador):** com o app instalado, arquivos `.luzmap.json`, imagens e vídeos podem ser abertos com o LuzMap pelo gerenciador de arquivos (“Abrir com”).
+- **Botão Voltar:** no Android (e no gesto de voltar), Voltar fecha primeiro a janela, o painel ou a saída limpa abertos, em vez de sair do aplicativo.
+
+**Offline e atualizações.** Depois do primeiro acesso, **o aplicativo abre mesmo sem internet**. Suas mídias já estão no aparelho; só o vídeo de demonstração do site e o manual em PDF precisam de conexão (o manual fica guardado depois de aberto uma vez). Com internet, o LuzMap sempre carrega a versão mais recente; quando há novidade, aparece o aviso “Nova versão do LuzMap disponível — Atualizar”.
 
 ---
 
@@ -637,7 +668,7 @@ Esta parte é para quem quer entender o código ou modificá-lo. O LuzMap é esc
 
 ![Diagrama da arquitetura com os módulos agrupados](img/arquitetura.svg)
 
-*Figura 26 — Módulos do sistema.*
+*Figura 27 — Módulos do sistema.*
 
 | Arquivo | Papel |
 |---|---|
@@ -658,7 +689,10 @@ Esta parte é para quem quer entender o código ou modificá-lo. O LuzMap é esc
 | `js/recorder.js` | Gravação de vídeo. |
 | `js/demo.js`, `js/room.js` | A demonstração e a sala 3D. |
 | `js/capabilities.js` | Detecta o que o navegador suporta e escolhe o perfil de qualidade. |
-| `sw.js`, `manifest.webmanifest` | Funcionamento offline e instalação como app. |
+| `js/install.js` | Instalação como aplicativo: diálogo do navegador, guias do iPhone/Android, aviso no celular. |
+| `js/backstack.js` | Faz o botão Voltar fechar janelas, painéis e a saída limpa. |
+| `sw.js` | Service worker: funcionamento offline (rede primeiro, cópia local quando não há internet) e recebimento de arquivos compartilhados. |
+| `manifest.webmanifest`, `assets/splash/` | Identidade do app instalado: nome, ícones, atalhos, telas de abertura do iOS, abertura de arquivos e destino de compartilhamento. |
 
 **O laço de quadros.** Cerca de 60 vezes por segundo, o `app.js`:
 
@@ -678,7 +712,7 @@ Imagine o conteúdo (uma imagem, um vídeo, um efeito) como um quadrado de borra
 
 ![Comparação entre o conteúdo original, uma distorção simples e a homografia](img/homografia.svg)
 
-*Figura 27 — Os mesmos 4 cantos, duas distorções diferentes.*
+*Figura 28 — Os mesmos 4 cantos, duas distorções diferentes.*
 
 - **Distorção simples (interpolação linear):** divide cada borda em partes iguais. O centro do conteúdo fica na média dos quatro cantos. Parece aceitável, mas **não é como uma superfície real aparece em perspectiva**: numa porta vista de lado, o lado mais distante parece menor e as linhas se aproximam.
 - **Homografia (o que o LuzMap usa):** a transformação exata de um plano visto em perspectiva, a mesma da fotografia. As linhas se aproximam no lado “distante” e o **centro do conteúdo cai no cruzamento das diagonais** — como acontece quando você fotografa um quadro de lado.
@@ -718,7 +752,7 @@ Dentro da GPU, cada pixel passa pela mesma sequência (`shaders/common.js`): cal
 
 ![Comunicação entre a janela do editor e a janela de saída](img/sincronizacao.svg)
 
-*Figura 28 — Mensagens trocadas pelo BroadcastChannel.*
+*Figura 29 — Mensagens trocadas pelo BroadcastChannel.*
 
 As duas janelas são da mesma origem (mesmo site), então usam o **BroadcastChannel**, um canal de mensagens do próprio navegador. Nada passa pela internet.
 
@@ -772,9 +806,10 @@ Nada disso é necessário para usar o LuzMap; serve para quem vai modificá-lo.
 |---|---|
 | `node tools/serve.mjs` | Servidor local de desenvolvimento em `http://localhost:8080/` |
 | `node --test tests/mapping.test.mjs` | 10 testes da matemática (homografia, triangulação, malha) |
-| `node tests/e2e.mjs` | 51 testes de ponta a ponta no navegador (computador, tablets e celulares emulados) |
+| `node tests/e2e.mjs` | 61 testes de ponta a ponta no navegador (computador, tablets, celulares emulados de 320 a 412 px, instalação como app) |
 | `node tools/make-demo-video.mjs` | Gera o vídeo de demonstração a partir do app |
 | `node tools/screenshots.mjs`, `node tools/manual-shots.mjs` | Geram as capturas do README e deste manual |
+| `node tools/make-icons.mjs` | Gera ícones, ícones de atalho e as telas de abertura do iOS |
 | `node tools/make-manual.mjs` | Gera o PDF deste manual a partir do `MANUAL.md` |
 
 A publicação no GitHub Pages é automática a cada envio para a branch `main` (`.github/workflows/pages.yml`).
@@ -834,6 +869,10 @@ Na **janela do projetor**: **F** ou duplo clique = tela cheia, **I** = mostrar i
 
 **Aparece “Abra pelo endereço do GitHub Pages”.** Você abriu o arquivo direto do disco. Use o endereço https do site.
 
+**Não aparece a opção de instalar.** Use **Menu → Instalar como aplicativo**: o LuzMap mostra o caminho do seu aparelho. No iPhone, a instalação é sempre pelo botão Compartilhar. Se o LuzMap já estiver instalado, a opção some.
+
+**No app instalado do iPhone não aparecem meus projetos.** O app instalado tem armazenamento próprio, separado do Safari. Exporte no Safari (**Exportar com mídias**) e importe no app (capítulo 23).
+
 ## 32. Compatibilidade e limitações
 
 | Recurso | Chrome / Edge | Firefox | Safari (Mac) | Safari (iPhone/iPad) |
@@ -844,6 +883,8 @@ Na **janela do projetor**: **F** ou duplo clique = tela cheia, **I** = mostrar i
 | Tela cheia | ✓ | ✓ | ✓ | iPad ✓ · iPhone via Tela de Início |
 | Gravação de vídeo | WebM; MP4 em versões recentes | WebM | MP4 | MP4 (versões recentes) |
 | GIF animado | ✓ | versões recentes | 17+ | 17+ |
+| Instalar como aplicativo | ✓ diálogo do navegador (Android e PC) | Android ✓ · PC ✗ | Adicionar ao Dock | Compartilhar → Tela de Início |
+| Compartilhar para o app | Android ✓ | — | — | — |
 
 **Limitações conhecidas:**
 

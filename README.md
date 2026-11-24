@@ -7,7 +7,7 @@ Plataforma **gratuita** de *projection mapping* que roda inteira no navegador (H
 
 ![Demonstração automática: sala com parede, porta, armário, estante, mesa e piso mapeados](assets/screenshots/desktop-demo.jpg)
 
-**📘 Manual do usuário (40 páginas, didático, com figuras):** [`docs/manual/Manual-LuzMap.pdf`](docs/manual/Manual-LuzMap.pdf) · versão para ler no GitHub: [`docs/manual/MANUAL.md`](docs/manual/MANUAL.md). Também abre pelo menu do app → **Manual do usuário (PDF)**.
+**📘 Manual do usuário (44 páginas, didático, com figuras):** [`docs/manual/Manual-LuzMap.pdf`](docs/manual/Manual-LuzMap.pdf) · versão para ler no GitHub: [`docs/manual/MANUAL.md`](docs/manual/MANUAL.md). Também abre pelo menu do app → **Manual do usuário (PDF)**.
 
 **▶ Vídeo de demonstração real (77 s):** [`demos/luzmap-demo.mp4`](demos/luzmap-demo.mp4) · [WebM](demos/luzmap-demo.webm) — também disponível no próprio site pelo botão **“Assistir demonstração”**.
 
@@ -20,6 +20,7 @@ Plataforma **gratuita** de *projection mapping* que roda inteira no navegador (H
 - [Como usar (5 minutos)](#como-usar-5-minutos)
 - [Como conectar um projetor (Formovie S5 / HDMI)](#como-conectar-um-projetor-formovie-s5--hdmi)
 - [Como usar no celular](#como-usar-no-celular)
+- [Instalar como aplicativo (Android e iPhone)](#instalar-como-aplicativo-android-e-iphone)
 - [Atalhos de teclado](#atalhos-de-teclado)
 - [Publicação no GitHub Pages](#publicação-no-github-pages)
 - [Navegadores compatíveis](#navegadores-compatíveis)
@@ -75,7 +76,7 @@ Plataforma **gratuita** de *projection mapping* que roda inteira no navegador (H
 
 **Desempenho e compatibilidade**
 - Renderização 100% GPU (WebGL 2 com fallback WebGL 1), renderização sob demanda (para quando nada muda), perfis de qualidade **baixa/média/alta** com detecção automática e redução adaptativa se o FPS cair, controle de resolução, recuperação de perda de contexto WebGL, descarte de texturas ociosas.
-- **PWA** instalável com uso offline do app após o primeiro carregamento (service worker; mídias externas não são garantidas offline).
+- **Aplicativo instalável (PWA) no Android, iPhone/iPad e computador**: ícone na tela inicial, janela própria sem barras do navegador (tela cheia no iPhone), uso offline, tela sempre ligada durante a projeção, atalhos no ícone (Demonstração, Novo projeto, Saída do projetor), telas de abertura do iOS, **Compartilhar → LuzMap** no Android (importa fotos e vídeos da galeria), abertura de arquivos `.luzmap.json` no computador e botão Voltar que fecha painéis em vez de sair. O app oferece o diálogo nativo de instalação quando o navegador permite e um guia ilustrado quando não permite (Safari).
 - Detecção de recursos com mensagens objetivas (ajuda → “Recursos deste navegador”).
 - Interface em português, tema escuro, responsiva de verdade: no celular, barra de abas inferior, painéis deslizantes, ferramentas grandes, pinça para zoom, layout próprio em paisagem.
 
@@ -126,6 +127,18 @@ Notas: o navegador exige um clique para abrir janelas e entrar em tela cheia (re
 - **Limitação real da plataforma:** navegadores de celular não permitem controlar duas telas de forma independente; o celular espelha o que está na própria tela. Por isso a “saída limpa” é o caminho compatível.
 - **iPhone/iPad:** o Safari não oferece tela cheia para páginas (só para vídeos). Para ocupar a tela toda, use Compartilhar → **Adicionar à Tela de Início** e abra o LuzMap pelo ícone.
 
+## Instalar como aplicativo (Android e iPhone)
+
+O LuzMap pode ser instalado direto do site — sem loja, sem cadastro e de graça. No celular aparece o aviso **“Instale o LuzMap”**; a qualquer momento use **Menu → Instalar como aplicativo**.
+
+| Aparelho | Como instalar |
+|---|---|
+| **Android** (Chrome, Edge, Samsung Internet) | Botão **Instalar** no aviso, ou menu **⋮ → Instalar app**. |
+| **iPhone / iPad** (Safari; no iOS 16.4+ também Chrome/Edge/Firefox) | **Compartilhar** (quadrado com seta) → **Adicionar à Tela de Início** → **Adicionar**. |
+| **Computador** (Chrome, Edge) | Ícone de instalar na barra de endereço, ou o botão de celular na barra do LuzMap. Safari no Mac: Arquivo → Adicionar ao Dock. |
+
+Instalado, o LuzMap abre em tela cheia pelo ícone, funciona offline, mantém a tela ligada durante a projeção, recebe fotos e vídeos pelo **Compartilhar** do Android e abre arquivos de projeto no computador. **No iPhone, o app instalado tem armazenamento separado do Safari**: leve projetos com **Projetos → Exportar com mídias** e **Importar JSON**.
+
 ## Atalhos de teclado
 
 | Tecla | Ação |
@@ -173,6 +186,7 @@ Depois de publicado, acesse `https://brunoalmeida87.github.io/ProjectionMapping/
 | GIF animado | ✅ | ✅ (versões com ImageDecoder) | ✅ 17+ | ✅ 17+ |
 | Áudio reativo (microfone) | ✅ | ✅ | ✅ | ✅ |
 | Wake Lock | ✅ | ✅ (recente) | ✅ (16.4+) | ✅ (16.4+) |
+| Instalar como aplicativo | ✅ diálogo nativo (Android e PC) | Android ✅ · PC ❌ | Adicionar ao Dock | ✅ Compartilhar → Tela de Início |
 
 Prioridade de uso com projetor HDMI: **Windows + Chrome/Edge**. A tabela reflete as capacidades das plataformas; veja em [Testes realizados](#testes-realizados) o que foi efetivamente executado.
 
@@ -195,7 +209,9 @@ Sem frameworks e sem dependências: **~10 mil linhas** de JavaScript moderno (m�
 ```
 index.html            editor (desktop + celular)
 output.html           saída do projetor (só a composição)
-manifest.webmanifest  PWA            sw.js  service worker (cache do app)
+manifest.webmanifest  app instalável (ícones, atalhos, compartilhar, abrir arquivos)
+sw.js                 service worker: offline (rede primeiro) e recebimento de arquivos compartilhados
+assets/splash/        telas de abertura do iOS
 css/style.css         tema escuro, grid desktop, bottom sheets no celular
 shaders/common.js     pipeline das superfícies: homografia, máscara, feather, cor
 shaders/effects.js    23 efeitos GLSL
@@ -230,10 +246,11 @@ tools/                servidor local, gerador de vídeo, capturas, manual em PDF
 Executados neste ambiente de desenvolvimento (Linux, Chromium do Playwright em modo *headless* com renderização por software SwiftShader):
 
 - **Unidade (Node `node --test`)** — 10/10: homografia vs. solução geral (DLT), inversa, ponto central = cruzamento das diagonais, interpolação (U,V,W) exata, triangulação de polígono côncavo, ordenação de cantos, malha, transformações.
-- **E2E (`node tests/e2e.mjs`)** — **51/51**, com o site servido em sub-caminho `/ProjectionMapping/` (como no GitHub Pages):
+- **E2E (`node tests/e2e.mjs`)** — **61/61**, com o site servido em sub-caminho `/ProjectionMapping/` (como no GitHub Pages):
   - Desktop 1440×900 (mouse/teclado): carrega sem erros nem 404; caminhos relativos; cria as 8 ferramentas de forma; arrasta vértice sem mover os demais; ajuste fino por setas; desfazer/refazer; **perspectiva verificada por pixels** (cantos coloridos e centro projetivo); **máscaras** normal e invertida verificadas por pixels; efeitos animando e 4 superfícies simultâneas; 23 shaders compilam; **importa PNG** (cores verificadas), **WebM** (reproduz em loop), **MP4 H.264** (reproduziu neste Chromium), **GIF** (animado via ImageDecoder); **salva no IndexedDB e recupera após recarregar**; exporta/importa JSON; aviso de mídia ausente; **janela do projetor** abre, sincroniza (latência medida 80–150 ms) e não contém interface; saída limpa; assistente de calibração com 6 passos; **demo** com as 7 cenas e ≥6 superfícies simultâneas; **gravação MediaRecorder** gerou arquivo; restauração do projeto ao sair da demo; console sem erros críticos.
-  - **PWA**: service worker ativo e o app abre **offline** após o primeiro acesso.
-  - Layout em **notebook 1366×768**, **monitor Full HD 1920×1080**, **iPad Pro 11** (vertical e horizontal) e **Galaxy Tab S4**: sem rolagem/sobreposição, controles principais visíveis.
+  - **Aplicativo instalável**: diagnóstico de instalabilidade do Chrome sem erros, manifesto interpretado com id, atalhos, capturas e destino de compartilhamento; todos os ícones e as 16 telas de abertura do iOS carregam; **Compartilhar** (POST para o service worker) importa a imagem no app; o app abre **offline** após o primeiro acesso; o botão **Voltar** fecha janelas, painéis e a saída limpa sem sair do app.
+  - **Robustez**: projeto JSON corrompido (clipes, keyframes, malha e tipos inválidos) é importado sem erros; `?new=1` cria projeto e limpa a URL.
+  - Layout em **notebook 1366×768**, **monitor Full HD 1920×1080**, **iPad Pro 11** (vertical e horizontal), **Galaxy Tab S4**, **iPhone SE (320 px)** e **Galaxy S8 (360 px)**: sem rolagem/sobreposição, controles principais e menu visíveis.
   - Emulação de **iPhone 13 (vertical e horizontal)** e **Pixel 7** com toque: sem rolagem horizontal, controles visíveis, toque seleciona, **arrasto de vértice com o dedo**, **pinça faz zoom sem alterar a geometria**, painéis deslizantes, demo, saída limpa com aviso de limitações, console sem erros.
   - Resultado detalhado em `tests/results/e2e-results.json`.
 

@@ -1,6 +1,7 @@
 // UI primitives: inline SVG icons, toasts, modals and form controls.
 
 import { el, clamp } from './utils.js';
+import { pushBack, releaseBack } from './backstack.js';
 
 const P = {
   select: '<path d="M5 3l14 8-6 2-3 6z"/>',
@@ -133,10 +134,15 @@ const openModals = [];
 export function modal({ title, content, actions = [], cls = '', onClose = null, dismissable = true, wide = false }) {
   const backdrop = el('div.modal-backdrop');
   const box = el(`div.modal${cls ? '.' + cls : ''}${wide ? '.wide' : ''}`, { role: 'dialog', 'aria-modal': 'true', 'aria-label': title });
+  let backId = null;
+  let closed = false;
   const close = (result) => {
+    if (closed) return;
+    closed = true;
     backdrop.classList.remove('show');
     const i = openModals.indexOf(api);
     if (i >= 0) openModals.splice(i, 1);
+    if (backId) releaseBack(backId);
     setTimeout(() => backdrop.remove(), 200);
     onClose?.(result);
   };
@@ -162,6 +168,11 @@ export function modal({ title, content, actions = [], cls = '', onClose = null, 
   requestAnimationFrame(() => backdrop.classList.add('show'));
   const api = { close, body, box, backdrop };
   openModals.push(api);
+  if (dismissable)
+    backId = pushBack(() => {
+      backId = null;
+      close(null);
+    });
   setTimeout(() => box.querySelector('input,button.primary,button')?.focus?.({ preventScroll: true }), 50);
   return api;
 }

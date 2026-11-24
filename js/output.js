@@ -116,6 +116,19 @@ let fps = 0;
 let frames = 0;
 let fpsT = last;
 function frame(now) {
+  try {
+    drawFrame(now);
+  } catch (err) {
+    // Keep projecting even if one frame fails.
+    if (!frame.warned) {
+      frame.warned = true;
+      console.error('Erro no quadro da saída', err);
+    }
+  }
+  requestAnimationFrame(frame);
+}
+
+function drawFrame(now) {
   const dt = Math.min(0.1, (now - last) / 1000);
   last = now;
   transport.update(dt);
@@ -166,7 +179,6 @@ function frame(now) {
     statusEl.dataset.fps = fps;
     updateStatus();
   }
-  requestAnimationFrame(frame);
 }
 requestAnimationFrame(frame);
 

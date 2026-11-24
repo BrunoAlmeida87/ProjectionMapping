@@ -21,6 +21,8 @@ import { PRESET_MAP } from './presets.js';
 import { EFFECT_MAP } from './effects.js';
 import { detectCapabilities, autoQuality, isMobile, isIOS, fullscreenSupported, screenInfo, isStandalone } from './capabilities.js';
 import { surfaceOutline, pointInPolygon, rectPoints } from './mapping.js';
+import { Installer } from './install.js';
+import { pushBack, releaseBack } from './backstack.js';
 
 const DEMO_VIDEO = 'demos/luzmap-demo.mp4';
 const DEMO_POSTER = 'demos/luzmap-demo-poster.jpg';
@@ -92,6 +94,11 @@ class App {
     this.timeline = new TimelinePanel(this, $('#panel-timeline'));
     this.calDock = new CalibrationDock(this);
     this.demo = new DemoController(this);
+    this.installer = new Installer(this);
+    if (isStandalone()) {
+      // Installed app: avoid accidental page zoom (the editor has its own pinch-zoom).
+      document.addEventListener('gesturestart', (e) => e.preventDefault(), { passive: false });
+    }
 
     this._buildToolbar();
     this._bindHeader();
@@ -109,6 +116,7 @@ class App {
     this.transport.on('state', () => {
       this.projector.transportChanged();
       this.requestRender();
+      this._updateWakeLock();
     });
     this.transport.on('seek', () => this.projector.transportChanged());
     this.projector.on('outputs', () => this._updateStatus());
@@ -118,6 +126,7 @@ class App {
     window.addEventListener('beforeunload', () => this.saveNow(false));
     document.addEventListener('visibilitychange', () => {
       if (document.visibilityState === 'hidden') this.saveNow(false);
+      else this._updateWakeLock();
     });
     document.addEventListener('fullscreenchange', () => {
       if (!document.fullscreenElement && this.cleanOutput && !isIOS()) this.exitCleanOutput();
@@ -130,7 +139,27 @@ class App {
     this._registerSW();
     this._updateStatus();
     this._handleUrl();
+    this._bindLaunchQueue();
+    if (prefs.get('welcomed', false)) setTimeout(() => this.installer.maybeShowBanner(), 6000);
     window.__luzmap = this;
+  }
+
+  /** Keeps the screen on while projecting (clean output) or playing on phones / installed app. */
+  async _updateWakeLock() {
+    if (!('wakeLock' in navigator)) return;
+    const want = document.visibilityState === 'visible' && (this.cleanOutput || (this.transport.playing && (isMobile() || isStandalone()) && this.store.surfaces.length > 0));
+    try {
+      if (want && !this._wake) {
+        this._wake = await navigator.wakeLock.request('screen');
+        this._wake.addEventListener('release', () => (this._wake = null));
+      } else if (!want && this._wake) {
+        const w = this._wake;
+        this._wake = null;
+        await w.release();
+      }
+    } catch (_) {
+      /* not critical (e.g. battery saver) */
+    }
   }
 
   renderScale() {
@@ -158,8 +187,18 @@ class App {
   _frame(now) {
     const dt = this._last ? Math.min(0.1, (now - this._last) / 1000) : 0.016;
     this._last = now;
-    if (!this.manual) this._step(dt, now);
-    else if (this.dirty) this._draw();
+    try {
+      if (!this.manual) this._step(dt, now);
+      else if (this.dirty) this._draw();
+    } catch (err) {
+      // Never let one bad frame stop the loop (the projector must keep running).
+      this.dirty = false;
+      console.error('Erro no quadro', err);
+      if (!this._frameErrorShown) {
+        this._frameErrorShown = true;
+        toast('Um quadro não pôde ser desenhado. Se algo parecer errado, desfaça a última ação (Ctrl+Z) ou recarregue.', { type: 'error', duration: 8000 });
+      }
+    }
     requestAnimationFrame((t) => this._frame(t));
   }
 
@@ -775,10 +814,15 @@ class App {
   }
 
   async enterCleanOutput() {
+    if (this.cleanOutput) return;
     this.cleanOutput = true;
     this.editor.cleanMode = true;
     document.body.classList.add('clean-output');
     this.showPanel(null);
+    this._cleanBack = pushBack(() => {
+      this._cleanBack = null;
+      this.exitCleanOutput();
+    });
     this.editor.resize();
     this.requestRender();
     try {
@@ -786,11 +830,7 @@ class App {
     } catch (_) {
       /* ignored: still clean */
     }
-    try {
-      if ('wakeLock' in navigator) this._wake = await navigator.wakeLock.request('screen');
-    } catch (_) {
-      /* ignored */
-    }
+    this._updateWakeLock();
     toast(fullscreenSupported() ? 'Saída limpa. Toque na tela para sair (Esc no teclado).' : 'Saída limpa. Toque na tela para mostrar o botão de sair. Dica: adicione à Tela de Início para tela cheia.', { duration: 3500 });
   }
 
@@ -800,8 +840,13 @@ class App {
     this.editor.cleanMode = false;
     document.body.classList.remove('clean-output');
     $('#clean-exit').hidden = true;
+    if (this._cleanBack) {
+      const id = this._cleanBack;
+      this._cleanBack = null;
+      releaseBack(id);
+    }
     if (document.fullscreenElement) document.exitFullscreen?.().catch(() => {});
-    this._wake?.release?.().catch(() => {});
+    this._updateWakeLock();
     this.editor.resize();
     this.requestRender();
   }
@@ -957,6 +1002,16 @@ class App {
       const next = name && cur !== name ? name : '';
       document.body.dataset.sheet = next;
       $$('.mobile-tabbar [data-sheet]').forEach((b) => b.classList.toggle('on', b.dataset.sheet === next));
+      if (next && !this._sheetBack) {
+        this._sheetBack = pushBack(() => {
+          this._sheetBack = null;
+          this.showPanel(null);
+        });
+      } else if (!next && this._sheetBack) {
+        const id = this._sheetBack;
+        this._sheetBack = null;
+        releaseBack(id);
+      }
       setTimeout(() => this._updateInsets(), 280);
     } else if (name === 'props') $('#inspector')?.scrollIntoView?.({ block: 'nearest' });
   }
@@ -1089,10 +1144,14 @@ class App {
           opt('film', 'Assistir demonstração', 'Vídeo real do aplicativo em uso.', () => this.watchDemoVideo()),
           opt('wand', 'Assistente de calibração', 'Passo a passo para alinhar com o seu projetor.', () => this.openCalibrationWizard()),
           opt('plus', 'Começar em branco', 'Desenhe superfícies e aplique efeitos.', () => {}),
+          this.installer.worthOffering ? opt('phone', 'Instalar como aplicativo', 'Ícone na tela inicial, tela cheia e uso offline (Android, iPhone, PC).', () => this.installApp()) : null,
         ),
         el('p.muted.small', 'Dica: conecte o projetor por HDMI, abra a "Saída do projetor" e arraste-a para a tela do projetor.'),
       ),
-      onClose: () => prefs.set('welcomed', true),
+      onClose: () => {
+        prefs.set('welcomed', true);
+        setTimeout(() => this.installer.maybeShowBanner(), 2500);
+      },
     });
   }
 
@@ -1162,8 +1221,59 @@ class App {
 
   _handleUrl() {
     const q = new URLSearchParams(location.search);
+    if (q.has('new')) this.newProject();
     if (q.has('demo')) setTimeout(() => this.demo.start(), 200);
     if (q.has('video')) setTimeout(() => this.watchDemoVideo(), 200);
+    if (q.has('shared')) this._importShared();
+    // One-shot parameters must not run again on reload.
+    let changed = false;
+    for (const k of ['new', 'demo', 'video', 'shared', 'source']) {
+      if (q.has(k)) {
+        q.delete(k);
+        changed = true;
+      }
+    }
+    if (changed) {
+      const rest = q.toString();
+      history.replaceState(history.state, '', location.pathname + (rest ? `?${rest}` : '') + location.hash);
+    }
+  }
+
+  /** Files shared to the installed app (Android "Compartilhar") arrive through the service worker. */
+  async _importShared() {
+    if (!('caches' in window)) return;
+    try {
+      const cache = await caches.open('luzmap-share');
+      const files = [];
+      for (const req of await cache.keys()) {
+        const res = await cache.match(req);
+        if (res) {
+          const blob = await res.blob();
+          const name = decodeURIComponent(res.headers.get('X-File-Name') || 'compartilhado');
+          files.push(new File([blob], name, { type: blob.type || res.headers.get('Content-Type') || '' }));
+        }
+        await cache.delete(req);
+      }
+      if (!files.length) {
+        toast('Nenhum arquivo foi recebido pelo Compartilhar.', { type: 'warn' });
+        return;
+      }
+      toast(`${files.length} arquivo(s) recebido(s) pelo Compartilhar.`, { type: 'ok' });
+      await this.importFiles(files);
+      this.showPanel('media');
+    } catch (err) {
+      toast(`Não foi possível receber os arquivos: ${err.message}`, { type: 'error' });
+    }
+  }
+
+  /** Installed desktop app: open .luzmap.json / media files from the file manager. */
+  _bindLaunchQueue() {
+    if (!('launchQueue' in window)) return;
+    window.launchQueue.setConsumer(async (params) => {
+      if (!params.files || !params.files.length) return;
+      const files = await Promise.all(params.files.map((h) => h.getFile()));
+      this.importFiles(files);
+    });
   }
 
   _registerSW() {
@@ -1181,22 +1291,10 @@ class App {
         });
       })
       .catch((err) => console.warn('Service worker não registrado', err));
-    window.addEventListener('beforeinstallprompt', (e) => {
-      e.preventDefault();
-      this._installPrompt = e;
-      $('#btn-install')?.removeAttribute('hidden');
-    });
   }
 
-  async installApp() {
-    if (this._installPrompt) {
-      this._installPrompt.prompt();
-      this._installPrompt = null;
-    } else if (isIOS()) {
-      modal({ title: 'Instalar no iPhone/iPad', content: el('p', 'No Safari, toque em Compartilhar e depois em "Adicionar à Tela de Início". O LuzMap abrirá em tela cheia, sem as barras do navegador.') });
-    } else {
-      modal({ title: 'Instalar como aplicativo', content: el('p', isStandalone() ? 'O LuzMap já está instalado.' : 'Use o menu do navegador → "Instalar aplicativo" / "Adicionar à tela inicial".') });
-    }
+  installApp() {
+    return this.installer.install();
   }
 
   // ---------------------------------------------------------------- UI wiring
@@ -1329,7 +1427,7 @@ class App {
         item('projector', 'Saída para projetor', () => this._outputMenu(isMobile())),
         item('video', 'Gravar vídeo', () => this.openRecorder()),
         item('mic', 'Áudio reativo: usar microfone', () => this.useMicrophone()),
-        item('phone', 'Instalar como app', () => this.installApp()),
+        this.installer.installed ? null : item('phone', 'Instalar como aplicativo (Android, iPhone, PC)', () => this.installApp()),
         item('help', 'Ajuda, atalhos e compatibilidade', () => this.showHelp()),
         item('info', 'Manual do usuário (PDF)', () => window.open(MANUAL_PDF, '_blank', 'noopener')),
       ),

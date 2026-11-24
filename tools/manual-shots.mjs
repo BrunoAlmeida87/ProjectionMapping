@@ -19,6 +19,7 @@ async function open(ctxOpts = {}, { welcomed = true } = {}) {
   await ctx.addInitScript((w) => {
     if (w) localStorage.setItem('luzmap.welcomed', 'true');
     localStorage.setItem('luzmap.quality', '"2"');
+    localStorage.setItem('luzmap.installBannerUntil', '9000000000000000');
   }, welcomed);
   const page = await ctx.newPage();
   await page.goto(URL0);
@@ -438,6 +439,27 @@ const roomPts = (page, what) =>
   await page.waitForTimeout(500);
   await settle(page, 0.4);
   await shot(page, '25-celular-propriedades.jpg');
+  await ctx.close();
+}
+
+// ------------------------------------------------------------------ installing as an app
+{
+  const { ctx, page } = await open({ ...devices['iPhone 13'], deviceScaleFactor: 2 });
+  await page.evaluate(() => {
+    localStorage.removeItem('luzmap.installBannerUntil');
+    window.__luzmap.installer.maybeShowBanner();
+  });
+  await page.waitForTimeout(500);
+  await shot(page, '27-instalar-banner.jpg');
+  await page.evaluate(() => window.__luzmap.installer.hideBanner());
+  await page.evaluate(() => window.__luzmap.installer.showGuide('ios'));
+  await page.waitForTimeout(400);
+  await shot(page, '28-instalar-iphone.jpg', { el: '.modal' });
+  await page.keyboard.press('Escape');
+  await page.waitForTimeout(300);
+  await page.evaluate(() => window.__luzmap.installer.showGuide('android'));
+  await page.waitForTimeout(400);
+  await shot(page, '29-instalar-android.jpg', { el: '.modal' });
   await ctx.close();
 }
 

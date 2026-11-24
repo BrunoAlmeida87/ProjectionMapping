@@ -496,6 +496,102 @@ const main = async () => {
     await o.ctx.close();
   });
 
+  await test('PWA instalável: diagnóstico do Chrome sem erros, manifesto válido e com id', async () => {
+    const o = await openApp(browser, {}, { url: `http://localhost:${PORT}${BASE}` });
+    await o.page.evaluate(() => navigator.serviceWorker.ready);
+    await o.page.waitForTimeout(800);
+    const cdp = await o.ctx.newCDPSession(o.page);
+    const inst = await cdp.send('Page.getInstallabilityErrors');
+    const man = await cdp.send('Page.getAppManifest');
+    const parsed = man.manifest || {};
+    assert(inst.installabilityErrors.length === 0, `erros de instalação: ${JSON.stringify(inst.installabilityErrors)}`);
+    assert(!man.errors || man.errors.length === 0, `erros no manifesto: ${JSON.stringify(man.errors)}`);
+    assert(parsed.id && new URL(parsed.id).pathname === BASE, `id do app: ${parsed.id}`);
+    assert(parsed.shareTarget && parsed.shortcuts && parsed.shortcuts.length === 3 && parsed.screenshots.length === 4, `recursos: ${Object.keys(parsed).join(',')}`);
+    await o.ctx.close();
+  });
+
+  await test('Manifesto: ícones, capturas, atalhos e telas de abertura do iOS existem', async () => {
+    const o = await openApp(browser);
+    const res = await o.page.evaluate(async () => {
+      const m = await (await fetch('manifest.webmanifest')).json();
+      const urls = [...m.icons.map((i) => i.src), ...m.screenshots.map((i) => i.src), ...m.shortcuts.flatMap((sc) => sc.icons.map((i) => i.src))];
+      urls.push(...[...document.querySelectorAll('link[rel="apple-touch-startup-image"], link[rel="apple-touch-icon"]')].map((l) => l.getAttribute('href')));
+      const bad = [];
+      for (const u of urls) {
+        const r = await fetch(u);
+        if (!r.ok) bad.push(`${r.status} ${u}`);
+      }
+      return { n: urls.length, bad, share: !!m.share_target, files: !!m.file_handlers, splash: document.querySelectorAll('link[rel="apple-touch-startup-image"]').length, maskable: m.icons.some((i) => i.purpose === 'maskable') };
+    });
+    assert(res.bad.length === 0, res.bad.join(', '));
+    assert(res.share && res.files && res.maskable && res.splash >= 16, JSON.stringify(res));
+    await o.ctx.close();
+  });
+
+  await test('Compartilhar (Android): arquivos enviados ao app instalado são importados', async () => {
+    if (!fx.png) return;
+    const o = await openApp(browser, {}, { url: `http://localhost:${PORT}${BASE}index.html` });
+    await o.page.evaluate(() => navigator.serviceWorker.ready);
+    await o.page.waitForTimeout(800);
+    const b64 = fs.readFileSync(fx.png).toString('base64');
+    const status = await o.page.evaluate(async (data) => {
+      const bin = Uint8Array.from(atob(data), (c) => c.charCodeAt(0));
+      const fd = new FormData();
+      fd.append('media', new File([bin], 'compartilhada.png', { type: 'image/png' }));
+      const r = await fetch('share-target', { method: 'POST', body: fd });
+      return { url: r.url, ok: r.ok };
+    }, b64);
+    assert(/index\.html\?shared=1/.test(status.url), `redirecionamento: ${status.url}`);
+    await o.page.goto(`http://localhost:${PORT}${BASE}index.html?shared=1`);
+    await o.page.waitForFunction(() => window.__luzmap && Object.values(window.__luzmap.store.project.media).some((m) => m.name === 'compartilhada.png'), null, { timeout: 10000 });
+    assert(!(await o.page.evaluate(() => location.search.includes('shared'))), 'parâmetro shared não foi limpo da URL');
+    await o.ctx.close();
+  });
+
+  await test('Botão voltar fecha janelas e a saída limpa em vez de sair do app', async () => {
+    const o = await openApp(browser);
+    const url0 = o.page.url();
+    await o.page.click('#btn-help');
+    await o.page.waitForSelector('.modal-backdrop');
+    await o.page.goBack();
+    await o.page.waitForTimeout(300);
+    assert((await o.page.locator('.modal-backdrop').count()) === 0, 'modal continuou aberto');
+    assert(o.page.url() === url0, `saiu da página: ${o.page.url()}`);
+    await o.page.evaluate(() => window.__luzmap.enterCleanOutput());
+    await o.page.waitForTimeout(200);
+    await o.page.goBack();
+    await o.page.waitForTimeout(300);
+    assert(!(await o.page.evaluate(() => document.body.classList.contains('clean-output'))), 'saída limpa continuou ativa');
+    // closing by the UI must not leave the page on a later Back
+    await o.page.click('#btn-help');
+    await o.page.keyboard.press('Escape');
+    await o.page.waitForTimeout(300);
+    assert(o.page.url() === url0 && (await o.page.evaluate(() => !!window.__luzmap)), 'histórico inconsistente');
+    await o.ctx.close();
+  });
+
+  await test('?new=1 cria projeto novo e limpa a URL; JSON corrompido não quebra o app', async () => {
+    const o = await openApp(browser, {}, { url: `http://localhost:${PORT}${BASE}index.html?nosw&new=1` });
+    assert(!(await o.page.evaluate(() => location.search.includes('new'))), 'parâmetro new não removido');
+    const file = path.join(tmp, 'corrompido.luzmap.json');
+    fs.writeFileSync(file, JSON.stringify({ format: 'luzmap-project', project: { name: 'Corrompido', surfaces: [
+      { type: 'quad', points: [[0.1, 0.1], [0.9, 0.1], [0.9, 0.9], [0.1, 0.9]], clips: [{ start: 0, end: 5 }, { start: 'x' }, null], keys: { opacity: [{ t: 'a', v: 1 }] }, content: { type: 'effect', effect: 'inexistente' } },
+      { type: 'mesh', points: [[0, 0], [1, 0], [1, 1], [0, 1]], mesh: { cols: 50, rows: -2 } },
+      { type: 'quad', points: [[0, 0], [1, 0], [1, 1]] },
+      { points: 'x' },
+    ] } }));
+    await o.page.click('#btn-projects');
+    await o.page.setInputFiles('.modal input[type=file]', file);
+    await o.page.waitForFunction(() => window.__luzmap.store.project.name === 'Corrompido', null, { timeout: 5000 });
+    await o.page.evaluate(() => window.__luzmap.seek(2));
+    await o.page.waitForTimeout(600);
+    const st = await o.page.evaluate(() => ({ n: window.__luzmap.store.surfaces.length, fps: window.__luzmap.fps }));
+    assert(st.n === 3, `superfícies: ${st.n}`);
+    assert(o.errors.length === 0, o.errors.join(' | '));
+    await o.ctx.close();
+  });
+
   // ------------------------------------------------------------------ other screen sizes
   console.log('\nNotebook, monitor Full HD e tablets (layout)');
   for (const [label, opts] of [
@@ -504,6 +600,8 @@ const main = async () => {
     ['iPad Pro 11 vertical', { ...devices['iPad Pro 11'], deviceScaleFactor: 1 }],
     ['iPad Pro 11 horizontal', { ...devices['iPad Pro 11 landscape'], deviceScaleFactor: 1 }],
     ['Galaxy Tab S4', { ...devices['Galaxy Tab S4'], deviceScaleFactor: 1 }],
+    ['iPhone SE (320 px)', { ...devices['iPhone SE'], deviceScaleFactor: 1 }],
+    ['Galaxy S8 (360 px)', { ...devices['Galaxy S8'], deviceScaleFactor: 1 }],
   ]) {
     const o = await openApp(browser, opts);
     await test(`${label}: sem sobreposição/rolagem e controles principais visíveis`, async () => {
@@ -517,10 +615,10 @@ const main = async () => {
           return r.width > 0 && r.height > 0 && r.right <= innerWidth + 1 && r.bottom <= innerHeight + 1 && r.left >= -1 && r.top >= -1;
         };
         const v = document.querySelector('#viewport').getBoundingClientRect();
-        return { sw: document.documentElement.scrollWidth, iw: innerWidth, sh: document.documentElement.scrollHeight, ih: innerHeight, viewport: v.width > 200 && v.height > 150, demo: vis('#btn-demo'), out: vis('#btn-output'), tools: vis('.toolbar') };
+        return { sw: document.documentElement.scrollWidth, iw: innerWidth, sh: document.documentElement.scrollHeight, ih: innerHeight, viewport: v.width > 200 && v.height > 150, demo: vis('#btn-demo'), out: vis('#btn-output'), tools: vis('.toolbar'), menu: vis('#btn-menu') };
       });
       assert(m.sw <= m.iw && m.sh <= m.ih, `rolagem ${m.sw}x${m.sh} > ${m.iw}x${m.ih}`);
-      assert(m.viewport && m.demo && m.out && m.tools, JSON.stringify(m));
+      assert(m.viewport && m.demo && m.out && m.tools && m.menu, JSON.stringify(m));
       assert(o.errors.length === 0, o.errors.join(' | '));
     });
     await o.ctx.close();
@@ -600,6 +698,15 @@ const main = async () => {
       await page.tap('.mobile-tabbar [data-sheet="layers"]');
       await page.waitForTimeout(320);
       assert(await page.evaluate(() => !document.body.dataset.sheet), 'painel não fechou');
+    });
+
+    await test('botão voltar do celular fecha o painel aberto', async () => {
+      await page.tap('.mobile-tabbar [data-sheet="effects"]');
+      await page.waitForTimeout(320);
+      assert(await page.evaluate(() => document.body.dataset.sheet === 'effects'), 'painel não abriu');
+      await page.goBack();
+      await page.waitForTimeout(350);
+      assert(await page.evaluate(() => !document.body.dataset.sheet && !!window.__luzmap), 'voltar não fechou o painel');
     });
 
     await test('demo funciona no celular', async () => {

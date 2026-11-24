@@ -1,20 +1,60 @@
 {
+  "id": "/ProjectionMapping/",
   "name": "LuzMap — Projection Mapping",
   "short_name": "LuzMap",
-  "description": "Projection mapping gratuito no navegador: mapeie paredes, portas e móveis com efeitos animados, imagens e vídeos.",
+  "description": "Projection mapping gratuito: mapeie paredes, portas e móveis com efeitos animados, imagens e vídeos. Funciona offline, no celular e no computador.",
   "lang": "pt-BR",
-  "start_url": "./index.html",
+  "dir": "ltr",
+  "start_url": "./index.html?source=app",
   "scope": "./",
   "display": "standalone",
-  "display_override": ["fullscreen", "standalone"],
   "orientation": "any",
   "background_color": "#0b0d12",
   "theme_color": "#0b0d12",
-  "categories": ["graphics", "entertainment", "productivity"],
+  "categories": ["graphics", "entertainment", "productivity", "photo"],
+  "prefer_related_applications": false,
+  "launch_handler": { "client_mode": ["focus-existing", "auto"] },
   "icons": [
-    { "src": "assets/icons/icon-192.png", "sizes": "192x192", "type": "image/png" },
-    { "src": "assets/icons/icon-512.png", "sizes": "512x512", "type": "image/png" },
+    { "src": "assets/icons/icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any" },
+    { "src": "assets/icons/icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any" },
     { "src": "assets/icons/icon-maskable-512.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable" },
-    { "src": "assets/icons/icon.svg", "sizes": "any", "type": "image/svg+xml" }
-  ]
+    { "src": "assets/icons/icon-maskable-192.png", "sizes": "192x192", "type": "image/png", "purpose": "maskable" },
+    { "src": "assets/icons/icon.svg", "sizes": "any", "type": "image/svg+xml", "purpose": "any" }
+  ],
+  "screenshots": [
+    { "src": "assets/screenshots/desktop-demo.jpg", "sizes": "1440x900", "type": "image/jpeg", "form_factor": "wide", "label": "Sala mapeada com água, portal, galáxia e partículas" },
+    { "src": "assets/screenshots/desktop-editor.jpg", "sizes": "1440x900", "type": "image/jpeg", "form_factor": "wide", "label": "Editor com superfícies, propriedades e timeline" },
+    { "src": "assets/screenshots/mobile-portrait-demo.jpg", "sizes": "780x1328", "type": "image/jpeg", "form_factor": "narrow", "label": "Demonstração no celular" },
+    { "src": "assets/screenshots/mobile-portrait-edit.jpg", "sizes": "780x1328", "type": "image/jpeg", "form_factor": "narrow", "label": "Ajuste fino de vértices por toque" }
+  ],
+  "shortcuts": [
+    { "name": "Demonstração", "short_name": "Demo", "description": "Sala virtual mapeada em 7 cenas", "url": "./index.html?demo=1", "icons": [{ "src": "assets/icons/shortcut-demo.png", "sizes": "96x96", "type": "image/png" }] },
+    { "name": "Novo projeto", "short_name": "Novo", "description": "Começar um mapping do zero", "url": "./index.html?new=1", "icons": [{ "src": "assets/icons/shortcut-new.png", "sizes": "96x96", "type": "image/png" }] },
+    { "name": "Saída do projetor", "short_name": "Projetor", "description": "Abrir a janela de projeção com o último projeto", "url": "./output.html", "icons": [{ "src": "assets/icons/shortcut-output.png", "sizes": "96x96", "type": "image/png" }] }
+  ],
+  "file_handlers": [
+    {
+      "action": "./index.html?source=file",
+      "accept": {
+        "application/json": [".json"],
+        "image/png": [".png"],
+        "image/jpeg": [".jpg", ".jpeg"],
+        "image/webp": [".webp"],
+        "image/gif": [".gif"],
+        "video/mp4": [".mp4", ".m4v"],
+        "video/webm": [".webm"]
+      }
+    }
+  ],
+  "share_target": {
+    "action": "./share-target",
+    "method": "POST",
+    "enctype": "multipart/form-data",
+    "params": {
+      "title": "title",
+      "text": "text",
+      "url": "url",
+      "files": [{ "name": "media", "accept": ["image/*", "video/*", "audio/*", "application/json", ".json"] }]
+    }
+  }
 }

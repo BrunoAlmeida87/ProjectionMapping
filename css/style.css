@@ -603,13 +603,68 @@ body.clean-output .viewport { background: #000; cursor: none; }
   .modal { border-radius: 14px; width: min(640px, 100%); }
 }
 
+@media (max-width: 900px) {
+  .project-title { min-width: 0; flex: 1 1 0; }
+}
 @media (max-width: 420px) {
   .demo-btn .ic { display: none; }
   .demo-btn { padding: 0 8px; font-size: 12px; }
   .topbar .tb-group { gap: 2px; }
   .btn.icon-only, .btn:not(:has(.lbl)) { width: 34px; }
 }
+@media (max-width: 380px) {
+  .topbar { gap: 3px; }
+  .brand { display: none; }
+  .btn.icon-only, .btn:not(:has(.lbl)) { width: 32px; min-height: 34px; }
+  .demo-btn { padding: 0 6px; font-size: 11px; letter-spacing: 0; }
+  .project-name { font-size: 12px; }
+}
 
 @media (prefers-reduced-motion: reduce) {
   * { animation: none !important; transition: none !important; }
+}
+
+/* ---------------------------------------------------------------- install (PWA) */
+
+.install-banner {
+  position: fixed; left: 50%; bottom: calc(18px + var(--safe-b)); transform: translate(-50%, 24px); opacity: 0;
+  transition: opacity 0.3s, transform 0.3s; display: flex; align-items: center; gap: 10px; padding: 10px 8px 10px 12px;
+  width: min(470px, calc(100% - 20px)); background: #151a26f7; border: 1px solid #7c5cff66; border-radius: 14px;
+  box-shadow: 0 16px 40px #000c; z-index: 150; backdrop-filter: blur(8px);
+}
+.install-banner.show { opacity: 1; transform: translate(-50%, 0); }
+.install-banner img { border-radius: 10px; flex: none; }
+.install-banner .btn { flex: none; }
+.install-text { flex: 1; display: flex; flex-direction: column; min-width: 0; line-height: 1.3; }
+.install-text small { color: var(--muted); font-size: 11.5px; }
+body.has-install-banner .toasts { bottom: calc(96px + var(--safe-b)); }
+.install-modal .lead { margin: 4px 0 6px; }
+.install-tabs { margin-bottom: 8px; }
+.install-steps { list-style: none; padding: 0; margin: 10px 0; display: flex; flex-direction: column; gap: 8px; counter-reset: step; }
+.install-steps li { display: flex; gap: 12px; align-items: center; padding: 10px 12px; border-radius: 10px; background: var(--panel-2); border: 1px solid var(--line); counter-increment: step; position: relative; }
+.install-steps li::before { content: counter(step); position: absolute; left: -7px; top: -7px; width: 20px; height: 20px; border-radius: 50%; background: var(--accent-2); color: #fff; font-size: 11px; font-weight: 800; display: flex; align-items: center; justify-content: center; }
+.sysicon { width: 38px; height: 38px; flex: none; display: flex; align-items: center; justify-content: center; border-radius: 9px; background: #0b0d12; border: 1px solid var(--line-2); color: var(--text); }
+.sysicon svg { width: 22px; height: 22px; }
+.sysicon.blue { color: #3b82f6; }
+.callout-mini { display: flex; gap: 8px; align-items: flex-start; font-size: 12px; padding: 8px 10px; border-radius: 8px; background: #0e2a33; border: 1px solid #22d3ee44; margin-top: 8px; }
+.callout-mini.warn { background: #3a2a07; border-color: #fbbf2466; color: #fde68a; }
+.callout-mini .ic { width: 16px; height: 16px; flex: none; margin-top: 1px; }
+.install-benefits { list-style: none; padding: 0; margin: 14px 0 0; display: grid; grid-template-columns: 1fr 1fr; gap: 6px 14px; }
+.install-benefits li { display: flex; gap: 6px; align-items: flex-start; font-size: 12px; color: var(--muted); }
+.install-benefits .ic { color: var(--ok); width: 16px; height: 16px; flex: none; }
+@media (max-width: 900px) {
+  .install-banner { bottom: calc(var(--tab-h) + 76px + var(--safe-b)); }
+  body.has-install-banner .toasts { bottom: calc(var(--tab-h) + 156px + var(--safe-b)); }
+}
+@media (max-width: 900px) and (orientation: landscape) and (max-height: 540px) {
+  .install-banner { bottom: calc(10px + var(--safe-b)); left: calc(50% - 32px); }
+}
+@media (max-width: 600px) {
+  .install-benefits { grid-template-columns: 1fr; }
+}
+
+/* iOS zooms the page when a focused field uses a font smaller than 16px. */
+@media (pointer: coarse) {
+  .input, .num, .select, select, input[type='text'], input[type='number'] { font-size: 16px; }
+  .select.small { font-size: 14px; }
 }

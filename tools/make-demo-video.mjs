@@ -24,6 +24,7 @@ const ctx = await browser.newContext({ viewport: { width: W, height: H }, device
 await ctx.addInitScript(() => {
   localStorage.setItem('luzmap.welcomed', 'true');
   localStorage.setItem('luzmap.quality', '"2"');
+    localStorage.setItem('luzmap.installBannerUntil', '9000000000000000');
 });
 const page = await ctx.newPage();
 page.on('pageerror', (e) => console.error('pageerror', e.message));

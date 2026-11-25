@@ -23,6 +23,7 @@ import { detectCapabilities, autoQuality, isMobile, isIOS, fullscreenSupported, 
 import { surfaceOutline, pointInPolygon, rectPoints } from './mapping.js';
 import { Installer } from './install.js';
 import { pushBack, releaseBack } from './backstack.js';
+import { ChristmasPanel, XMAS_MAP, libraryKey, itemFromSource, fetchLibraryFile, itemRect, styleForItem, buildChristmasRoom, XMAS_TEMPLATE_NEEDS } from './christmas.js';
 
 const DEMO_VIDEO = 'demos/luzmap-demo.mp4';
 const DEMO_POSTER = 'demos/luzmap-demo-poster.jpg';
@@ -90,6 +91,15 @@ class App {
     this.layers = new LayersPanel(this, $('#panel-layers'));
     this.effects = new EffectsPanel(this, $('#panel-effects'));
     this.mediaPanel = new MediaPanel(this, $('#panel-media'));
+    this.christmas = new ChristmasPanel(this, $('#panel-natal'));
+    this._libPending = new Map();
+    // Library media (Christmas pack) missing on this device is downloaded again automatically.
+    this.media.recover = async (id) => {
+      const item = itemFromSource(this.store.project.media?.[id]?.source);
+      if (!item) return null;
+      const file = await fetchLibraryFile(item);
+      return { blob: file, info: { name: file.name, kind: item.kind === 'audio' ? 'audio' : 'image', mime: file.type, size: file.size, source: libraryKey(item.id) } };
+    };
     this.inspector = new Inspector(this, $('#inspector-body'));
     this.timeline = new TimelinePanel(this, $('#panel-timeline'));
     this.calDock = new CalibrationDock(this);
@@ -583,18 +593,27 @@ class App {
     this.applyEffect(fxId, hit && hit.role !== 'mask' ? hit : null);
   }
 
-  applyPreset(id) {
+  async applyPreset(id) {
     const preset = PRESET_MAP[id];
     if (!preset) return;
+    let m = {};
+    if (preset.needs?.length) {
+      try {
+        m = await this.libraryMediaMap(preset.needs);
+      } catch (err) {
+        toast(err.message, { type: 'error', duration: 6000 });
+        return;
+      }
+    }
     const sel = this.store.selected;
     if (sel && sel.role !== 'mask' && preset.style) {
       this.store.checkpoint();
-      preset.style(sel);
+      const added = preset.style(sel, m, this.store) || [];
       sel.clips = [];
-      this.store.changed('content');
+      this.store.changed(added.length ? 'structure' : 'content');
       toast(`Preset "${preset.name}" aplicado em "${sel.name}".`, { duration: 1800 });
     } else {
-      const list = preset.build();
+      const list = preset.build(m);
       this.store.checkpoint();
       this.store.project.surfaces.push(...list);
       this.store.changed('structure');
@@ -602,6 +621,137 @@ class App {
       toast(`Preset "${preset.name}" adicionado. Arraste os cantos para encaixar no objeto real.`, { duration: 3500 });
     }
     if (!this.transport.playing) this.transport.play();
+    if (isMobile()) this.showPanel(null);
+  }
+
+  // ---------------------------------------------------------------- content library (Natal)
+
+  /**
+   * Returns the media id of a library item, importing it on first use. The same
+   * file is reused across projects (looked up by its `source` key in IndexedDB).
+   */
+  async libraryMedia(itemId) {
+    const item = XMAS_MAP[itemId];
+    if (!item) throw new Error(`Item desconhecido: ${itemId}`);
+    const key = libraryKey(itemId);
+    const p = this.store.project;
+    const register = (mid) => {
+      if (!p.media[mid]) {
+        const meta = this.media.meta(mid) || {};
+        p.media[mid] = { ...meta, source: key, loop: true, speed: 1, paused: false, muted: true, volume: 1 };
+      }
+      return mid;
+    };
+    const inProject = Object.values(p.media || {}).find((x) => x.source === key && this.media.status(x.id) === 'ready');
+    if (inProject) return inProject.id;
+    if (!this._libPending.has(key)) {
+      const job = (async () => {
+        const records = await this.listLibrary().catch(() => []);
+        for (const rec of records.filter((r) => r.source === key)) {
+          if (await this.media.ensure(rec.id)) return rec.id;
+        }
+        const t = toast(`Baixando "${item.name}" (${formatBytes(item.bytes)})…`, { duration: 0 });
+        try {
+          const file = await fetchLibraryFile(item);
+          const meta = await this.media.importFile(file, { source: key });
+          const got = this.media.get(meta.id);
+          if (got?.status !== 'ready') throw new Error(got?.error || `Falha ao abrir "${item.name}".`);
+          return meta.id;
+        } finally {
+          t.remove();
+        }
+      })();
+      this._libPending.set(key, job);
+      job.finally(() => this._libPending.delete(key)).catch(() => {});
+    }
+    const mid = register(await this._libPending.get(key));
+    this.store.changed('media');
+    return mid;
+  }
+
+  async libraryMediaMap(ids) {
+    const out = {};
+    for (const id of ids) out[id] = await this.libraryMedia(id);
+    return out;
+  }
+
+  /** Adds a library item: images become a new surface (or fill the selected one); songs become the soundtrack. */
+  async addLibraryItem(itemId, { target = 'new' } = {}) {
+    const item = XMAS_MAP[itemId];
+    if (!item) return null;
+    if (item.kind !== 'audio' && target === 'selected' && (!this.store.selected || this.store.selected.role === 'mask')) {
+      toast('Selecione uma superfície primeiro (ou toque na imagem para criar uma nova).', { type: 'warn' });
+      return null;
+    }
+    let mid;
+    try {
+      mid = await this.libraryMedia(itemId);
+    } catch (err) {
+      toast(err.message || String(err), { type: 'error', duration: 6000 });
+      return null;
+    }
+    const p = this.store.project;
+    if (item.kind === 'audio') {
+      this.store.checkpoint();
+      p.audio.mediaId = mid;
+      this.store.changed('media');
+      this.audio.ensure();
+      this.media.unlock();
+      if (!this.transport.playing) this.transport.play();
+      toast(`Trilha sonora: ${item.name}. Toca sincronizada com a timeline.`, { type: 'ok', duration: 3000 });
+      return null;
+    }
+    let s = target === 'selected' ? this.store.selected : null;
+    this.store.checkpoint();
+    if (!s) {
+      const n = p.surfaces.filter((x) => x.role !== 'mask').length;
+      s = createSurface('quad', itemRect(item, p, n), { name: item.name });
+      p.surfaces.push(s);
+      this.store.changed('structure');
+    }
+    const clipId = this.store.sel.clipId;
+    const clip = target === 'selected' && clipId && s.clips.find((c) => c.id === clipId);
+    if (clip) clip.content = mediaContent(mid);
+    else s.content = mediaContent(mid);
+    styleForItem(s, item);
+    this.store.select(s.id, { clipId: clip ? clip.id : null });
+    this.store.changed('content');
+    this.editor.setTool('select');
+    if (!this.transport.playing) this.transport.play();
+    toast(target === 'selected' ? `${item.name} aplicado em "${s.name}".` : `${item.name} adicionado. Arraste os cantos para posicionar sobre o objeto real.`, { duration: 2600 });
+    if (isMobile()) this.showPanel(null);
+    return s;
+  }
+
+  /** Complete Christmas project mapped on the demo living room. */
+  async openChristmasTemplate() {
+    if (this.demo?.active) this.demo.stop({ restore: false });
+    if (this.store.surfaces.length) await this.saveNow(false);
+    let m;
+    try {
+      m = await this.libraryMediaMap(XMAS_TEMPLATE_NEEDS);
+    } catch (err) {
+      toast(err.message || String(err), { type: 'error', duration: 6000 });
+      return;
+    }
+    const keep = { ...this.store.project.media };
+    const dur = Math.round((XMAS_MAP['jingle-bells']?.duration || 68) * 10) / 10;
+    const proj = buildChristmasRoom(m, dur);
+    for (const mid of Object.values(m)) if (keep[mid]) proj.media[mid] = keep[mid];
+    this.ensureRoom();
+    this.store.setProject(proj);
+    this.store.select(null);
+    this.transport.configure(proj.timeline);
+    this.transport.seek(0);
+    this.setSimulation(true);
+    this.editor.fitView();
+    this.audio.ensure();
+    this.media.unlock();
+    this.transport.play();
+    this.requestRender();
+    this.projector.sendProject();
+    await this.saveNow(false);
+    toast('Modelo "Natal na sala" aberto: lareira, porta-presente, árvore de luzes, pisca-pisca, neve e trilha sonora. Ajuste as superfícies ao seu ambiente.', { type: 'ok', duration: 6000 });
     if (isMobile()) this.showPanel(null);
   }
 
@@ -993,7 +1143,7 @@ class App {
 
   showPanel(name) {
     const mobile = window.matchMedia('(max-width: 900px)').matches;
-    if (['layers', 'effects', 'media'].includes(name)) {
+    if (['layers', 'effects', 'media', 'natal'].includes(name)) {
       $$('.left-tabs [data-tab]').forEach((b) => b.classList.toggle('on', b.dataset.tab === name));
       $$('#left-panel .tab-pane').forEach((p) => (p.hidden = p.dataset.pane !== name));
     }
@@ -1225,9 +1375,10 @@ class App {
     if (q.has('demo')) setTimeout(() => this.demo.start(), 200);
     if (q.has('video')) setTimeout(() => this.watchDemoVideo(), 200);
     if (q.has('shared')) this._importShared();
+    if (q.has('natal')) setTimeout(() => this.openChristmasTemplate(), 200);
     // One-shot parameters must not run again on reload.
     let changed = false;
-    for (const k of ['new', 'demo', 'video', 'shared', 'source']) {
+    for (const k of ['new', 'demo', 'video', 'shared', 'source', 'natal']) {
       if (q.has(k)) {
         q.delete(k);
         changed = true;
@@ -1416,6 +1567,8 @@ class App {
         item('sparkles', 'DEMO — Experimentar projection mapping', () => this.demo.start()),
         item('record', 'GRAVAR DEMONSTRAÇÃO', () => this.recordDemo()),
         item('film', 'Assistir demonstração', () => this.watchDemoVideo()),
+        item('tree', 'Natal: abrir modelo "Natal na sala"', () => this.openChristmasTemplate()),
+        item('gift', 'Natal: imagens, efeitos e músicas', () => this.showPanel('natal')),
         item('plus', 'Novo projeto', () => {
           this.saveNow(false);
           this.newProject();
@@ -1438,7 +1591,7 @@ class App {
     $$('.mobile-tabbar [data-sheet]').forEach((b) =>
       b.addEventListener('click', () => {
         const name = b.dataset.sheet;
-        if (['layers', 'effects', 'media'].includes(name)) {
+        if (['layers', 'effects', 'media', 'natal'].includes(name)) {
           $$('#left-panel .tab-pane').forEach((p) => (p.hidden = p.dataset.pane !== name));
           $$('.left-tabs [data-tab]').forEach((x) => x.classList.toggle('on', x.dataset.tab === name));
         }

@@ -7,7 +7,9 @@ Plataforma **gratuita** de *projection mapping* que roda inteira no navegador (H
 
 ![Demonstração automática: sala com parede, porta, armário, estante, mesa e piso mapeados](assets/screenshots/desktop-demo.jpg)
 
-**📘 Manual do usuário (44 páginas, didático, com figuras):** [`docs/manual/Manual-LuzMap.pdf`](docs/manual/Manual-LuzMap.pdf) · versão para ler no GitHub: [`docs/manual/MANUAL.md`](docs/manual/MANUAL.md). Também abre pelo menu do app → **Manual do usuário (PDF)**.
+**📘 Manual do usuário (49 páginas, didático, com figuras):** [`docs/manual/Manual-LuzMap.pdf`](docs/manual/Manual-LuzMap.pdf) · versão para ler no GitHub: [`docs/manual/MANUAL.md`](docs/manual/MANUAL.md). Também abre pelo menu do app → **Manual do usuário (PDF)**.
+
+**🎄 Biblioteca de Natal:** 35 imagens originais (enfeites, faixas, letreiros, cenários e texturas), 8 efeitos animados, 7 presets, 3 músicas de domínio público e o modelo pronto **“Natal na sala”** — veja [Natal: imagens, efeitos e músicas](#natal-imagens-efeitos-e-músicas).
 
 **▶ Vídeo de demonstração real (77 s):** [`demos/luzmap-demo.mp4`](demos/luzmap-demo.mp4) · [WebM](demos/luzmap-demo.webm) — também disponível no próprio site pelo botão **“Assistir demonstração”**.
 
@@ -18,6 +20,7 @@ Plataforma **gratuita** de *projection mapping* que roda inteira no navegador (H
 - [Principais funcionalidades](#principais-funcionalidades)
 - [Capturas de tela](#capturas-de-tela)
 - [Como usar (5 minutos)](#como-usar-5-minutos)
+- [Natal: imagens, efeitos e músicas](#natal-imagens-efeitos-e-músicas)
 - [Como conectar um projetor (Formovie S5 / HDMI)](#como-conectar-um-projetor-formovie-s5--hdmi)
 - [Como usar no celular](#como-usar-no-celular)
 - [Instalar como aplicativo (Android e iPhone)](#instalar-como-aplicativo-android-e-iphone)
@@ -44,9 +47,10 @@ Plataforma **gratuita** de *projection mapping* que roda inteira no navegador (H
 - Desfazer/refazer (Ctrl+Z / Ctrl+Shift+Z e botões na tela), histórico de 120 passos.
 
 **Conteúdo**
-- **23 efeitos gerados na GPU (GLSL)**, com miniaturas animadas e parâmetros (velocidade, cores, intensidade, escala, direção, densidade, frequência, amplitude):
-  água em movimento, fogo, chuva, partículas luminosas, linhas geométricas, portal espacial, galáxia, neon/contorno, matrix digital, lava, ilusão 3D (túnel), ondas coloridas, plasma, aurora, viagem estelar, caleidoscópio, colmeia hexagonal, gradiente, pulso/estrobo + padrões de calibração (grade com cantos coloridos, xadrez, barras de cor, cor sólida).
-- **6 presets**: Parede animada, Porta dimensional, Armário iluminado, Estante futurista, Ambiente espacial, Projeção geométrica.
+- **31 efeitos gerados na GPU (GLSL)**, com miniaturas animadas e parâmetros (velocidade, cores, intensidade, escala, direção, densidade, frequência, amplitude):
+  água em movimento, fogo, chuva, partículas luminosas, linhas geométricas, portal espacial, galáxia, neon/contorno, matrix digital, lava, ilusão 3D (túnel), ondas coloridas, plasma, aurora, viagem estelar, caleidoscópio, colmeia hexagonal, gradiente, pulso/estrobo + padrões de calibração (grade com cantos coloridos, xadrez, barras de cor, cor sólida) + **8 de Natal**: neve caindo, pisca-pisca, listras de bengala, papel de presente, noite de Natal, flocos gigantes, árvore de luzes e brilho dourado.
+- **13 presets**: Parede animada, Porta dimensional, Armário iluminado, Estante futurista, Ambiente espacial, Projeção geométrica e, para o Natal, Árvore de luzes, Porta-presente, Lareira virtual, Janela com neve, Parede “Feliz Natal”, Pisca-pisca no teto e Coluna de bengala.
+- **Biblioteca de Natal** (aba **Natal**): 35 imagens originais prontas para projetar e 3 músicas; um toque cria a superfície já na proporção certa.
 - **Importação de mídia**: JPG, PNG, WebP, GIF (animado onde há `ImageDecoder`), MP4, WebM e demais formatos que o navegador decodifica; áudio (MP3, WAV, M4A…) como trilha sonora. Enquadramento cobrir/conter/esticar, zoom, deslocamento, rotação, espelhamento, repetição, reprodução/pausa, loop, velocidade, volume.
 - Ajustes de cor por superfície: opacidade, mistura (normal/adicionar/tela/multiplicar), borda suave, brilho, contraste, saturação, matiz.
 - **Áudio reativo** (microfone ou trilha sonora).
@@ -76,7 +80,7 @@ Plataforma **gratuita** de *projection mapping* que roda inteira no navegador (H
 
 **Desempenho e compatibilidade**
 - Renderização 100% GPU (WebGL 2 com fallback WebGL 1), renderização sob demanda (para quando nada muda), perfis de qualidade **baixa/média/alta** com detecção automática e redução adaptativa se o FPS cair, controle de resolução, recuperação de perda de contexto WebGL, descarte de texturas ociosas.
-- **Aplicativo instalável (PWA) no Android, iPhone/iPad e computador**: ícone na tela inicial, janela própria sem barras do navegador (tela cheia no iPhone), uso offline, tela sempre ligada durante a projeção, atalhos no ícone (Demonstração, Novo projeto, Saída do projetor), telas de abertura do iOS, **Compartilhar → LuzMap** no Android (importa fotos e vídeos da galeria), abertura de arquivos `.luzmap.json` no computador e botão Voltar que fecha painéis em vez de sair. O app oferece o diálogo nativo de instalação quando o navegador permite e um guia ilustrado quando não permite (Safari).
+- **Aplicativo instalável (PWA) no Android, iPhone/iPad e computador**: ícone na tela inicial, janela própria sem barras do navegador (tela cheia no iPhone), uso offline, tela sempre ligada durante a projeção, atalhos no ícone (Demonstração, Novo projeto, Natal na sala, Saída do projetor), telas de abertura do iOS, **Compartilhar → LuzMap** no Android (importa fotos e vídeos da galeria), abertura de arquivos `.luzmap.json` no computador e botão Voltar que fecha painéis em vez de sair. O app oferece o diálogo nativo de instalação quando o navegador permite e um guia ilustrado quando não permite (Safari).
 - Detecção de recursos com mensagens objetivas (ajuda → “Recursos deste navegador”).
 - Interface em português, tema escuro, responsiva de verdade: no celular, barra de abas inferior, painéis deslizantes, ferramentas grandes, pinça para zoom, layout próprio em paisagem.
 
@@ -86,7 +90,7 @@ Plataforma **gratuita** de *projection mapping* que roda inteira no navegador (H
 |---|---|
 | ![Editor com superfície selecionada, propriedades e timeline](assets/screenshots/desktop-editor.jpg) | ![Assistente/painel de calibração com grade, contornos e marcadores](assets/screenshots/desktop-calibration.jpg) |
 | **Saída do projetor (janela limpa)** | **Biblioteca de efeitos (todos gerados na GPU)** |
-| ![Saída do projetor: só a composição em fundo preto](assets/screenshots/projector-output.jpg) | ![Os 23 efeitos](assets/screenshots/effects-library.jpg) |
+| ![Saída do projetor: só a composição em fundo preto](assets/screenshots/projector-output.jpg) | ![Os 31 efeitos](assets/screenshots/effects-library.jpg) |
 
 | Celular — demo | Celular — edição com ajuste fino | Celular — paisagem |
 |---|---|---|
@@ -105,6 +109,34 @@ Plataforma **gratuita** de *projection mapping* que roda inteira no navegador (H
 
 > Dica: tire uma foto do ambiente a partir da posição do projetor e use-a como **foto de referência** (aba Mídia → ícone de casa). Com o botão **Simulação** você vê a luz projetada sobre a foto antes mesmo de ligar o projetor.
 
+## Natal: imagens, efeitos e músicas
+
+![Modelo "Natal na sala": lareira com fogo no armário, porta-presente, árvore de luzes na estante, pisca-pisca, letreiro, neve e toalha xadrez](assets/screenshots/natal-sala.jpg)
+
+A aba **Natal** (no celular, botão **Natal** na barra inferior) reúne tudo o que é preciso para uma projeção de fim de ano:
+
+| O quê | Conteúdo |
+|---|---|
+| **Modelo completo** | **Abrir modelo: Natal na sala** — a sala da demonstração decorada: lareira com fogo animado no armário, porta embrulhada como presente, árvore de luzes na estante, pisca-pisca no alto da parede, letreiro “Feliz Natal” com brilhos, céu de Natal com neve, toalha xadrez na mesa, flocos no piso e a trilha *Jingle Bells*. A cena muda na metade (porta verde, flocos gigantes). Também abre pelo menu ou por `?natal=1`. |
+| **Enfeites** (fundo transparente) | Árvore de Natal, estrela dourada, estrela-guia, bolas vermelha/dourada/azul, guirlanda, laço, sinos, bengala doce, presentes (vermelho, verde e pilha), boneco de neve, floco de neve, gorro, meia, azevinho, vela, casinha e biscoito de gengibre, presépio (silhueta dourada). |
+| **Faixas e molduras** | Cordão de luzes, festão de pinheiro, moldura natalina (centro transparente) e neve com pingentes de gelo — para o alto de paredes, janelas e portas. |
+| **Letreiros** | Feliz Natal, Boas Festas, Feliz Ano Novo. |
+| **Cenários** | Noite de neve na vila e lareira (com abertura pronta para o efeito de fogo). |
+| **Texturas** (repetem sem emenda) | Papel de presente vermelho e verde, xadrez natalino, flocos no azul. |
+| **Músicas** | *Jingle Bells* (sinos e guizos, 69 s), *Noite Feliz* (caixinha de música, 53 s), *We Wish You a Merry Christmas* (45 s) — melodias de domínio público, arranjos sintetizados pelo LuzMap. Botão **Ouvir** para prévia e **Usar** para virar trilha sonora. |
+| **Efeitos animados** | Neve caindo, pisca-pisca, listras de bengala, papel de presente, noite de Natal, flocos gigantes, árvore de luzes, brilho dourado (também na aba Efeitos, categoria **Natal**). |
+| **Montagens prontas** | Árvore de luzes, Porta-presente, Lareira virtual, Janela com neve, Parede “Feliz Natal”, Pisca-pisca no teto, Coluna de bengala. |
+
+**Como usar:** toque numa imagem para criá-la como **nova superfície** já na proporção certa (depois arraste os cantos sobre o objeto real) ou use **✓** para colocá-la na **superfície selecionada**. Os efeitos “de camada” (neve, pisca-pisca, árvore de luzes, brilho, flocos com fundo 0) são transparentes e podem ficar por cima de outras superfícies. **Lareira virtual** com uma superfície selecionada transforma aquela superfície (um armário, por exemplo) em lareira e cria o fogo exatamente na abertura, em perspectiva.
+
+**Arquivos:** as imagens (WebP, 5 MB no total, com as músicas) só são baixadas quando usadas; depois ficam salvas no aparelho e funcionam offline. Usar o mesmo item de novo não duplica o arquivo. Se um projeto com itens de Natal for aberto em outro aparelho, o app baixa esses itens de novo automaticamente — não é preciso reimportar.
+
+**Licença:** toda a arte foi desenhada para o LuzMap (vetores gerados por `tools/christmas-art.mjs`) e é distribuída sob a mesma licença MIT do projeto; as músicas usam melodias em domínio público (Pierpont, 1857; Gruber, 1818; tradicional inglesa) com arranjo sintetizado do zero por `tools/make-christmas-music.py` — nenhuma gravação de terceiros.
+
+| Arte da biblioteca | Efeitos de Natal (GPU) |
+|---|---|
+| ![As 35 imagens da biblioteca de Natal](assets/screenshots/natal-arte.jpg) | ![Os 8 efeitos de Natal](assets/screenshots/natal-efeitos.jpg) |
+
 ## Como conectar um projetor (Formovie S5 / HDMI)
 
 Fluxo recomendado no **Windows** com **Chrome ou Edge**:
@@ -122,7 +154,7 @@ Notas: o navegador exige um clique para abrir janelas e entrar em tela cheia (re
 ## Como usar no celular
 
 - O editor completo funciona por toque: **toque** seleciona, **arraste** move superfícies e vértices (com lupa de precisão), **dois dedos** fazem zoom/deslocamento sem alterar a geometria, o **pad de setas** faz ajuste fino de 1/5/20 px, e há botões de desfazer/refazer no topo.
-- Painéis: **Camadas, Efeitos, Mídia, Ajustes e Timeline** na barra inferior (em paisagem, na lateral).
+- Painéis: **Camadas, Efeitos, Mídia, Natal, Ajustes e Timeline** na barra inferior (em paisagem, na lateral).
 - Para projetar: conecte o projetor (adaptador **USB-C → HDMI**, espelhamento **Miracast/Smart View/AirPlay**) e toque em **Saída do projetor → Saída limpa nesta tela**: só a composição aparece, em tela cheia quando o navegador permite.
 - **Limitação real da plataforma:** navegadores de celular não permitem controlar duas telas de forma independente; o celular espelha o que está na própria tela. Por isso a “saída limpa” é o caminho compatível.
 - **iPhone/iPad:** o Safari não oferece tela cheia para páginas (só para vídeos). Para ocupar a tela toda, use Compartilhar → **Adicionar à Tela de Início** e abra o LuzMap pelo ícone.
@@ -198,13 +230,14 @@ Prioridade de uso com projetor HDMI: **Windows + Chrome/Edge**. A tabela reflete
 - **GIF animado** depende de `ImageDecoder`; sem ele o GIF aparece como imagem estática (o app informa).
 - **Formatos de vídeo** dependem do navegador (MP4 H.264 e WebM cobrem praticamente todos). Vídeos 4K podem ser pesados em celulares.
 - **WebM gravado pelo Chrome** pode não exibir a duração em alguns players (reproduz normalmente).
-- **Mídias são locais**: projetos exportados sem “com mídias” guardam só a referência; em outro dispositivo é preciso reimportar os arquivos (o app avisa). O espaço do IndexedDB depende do navegador.
+- **Mídias são locais**: projetos exportados sem “com mídias” guardam só a referência; em outro dispositivo é preciso reimportar os arquivos (o app avisa). Exceção: itens da biblioteca de Natal são baixados de novo automaticamente. O espaço do IndexedDB depende do navegador.
+- **Biblioteca de Natal**: o primeiro uso de cada item precisa de internet (depois funciona offline). Mover a lareira não move o fogo junto: posicione a superfície antes e aplique **Lareira virtual** com ela selecionada.
 - Calibração é **manual** (sem câmera/sensores), como solicitado.
 - A latência entre editor e janela do projetor depende do sistema; o vídeo de cada janela é decodificado separadamente e ressincronizado se desviar mais de ~0,35 s.
 
 ## Arquitetura e código
 
-Sem frameworks e sem dependências: **~10 mil linhas** de JavaScript moderno (módulos ES), GLSL ES 1.00 (compatível com WebGL 1 e 2) e CSS.
+Sem frameworks e sem dependências: **~12 mil linhas** de JavaScript moderno (módulos ES), GLSL ES 1.00 (compatível com WebGL 1 e 2) e CSS.
 
 ```
 index.html            editor (desktop + celular)
@@ -214,7 +247,7 @@ sw.js                 service worker: offline (rede primeiro) e recebimento de a
 assets/splash/        telas de abertura do iOS
 css/style.css         tema escuro, grid desktop, bottom sheets no celular
 shaders/common.js     pipeline das superfícies: homografia, máscara, feather, cor
-shaders/effects.js    23 efeitos GLSL
+shaders/effects.js    31 efeitos GLSL (8 de Natal)
 js/app.js             inicialização, ações, atalhos, autosave, modais
 js/mapping.js         homografia (quadrado→quad, DLT), triangulação, malha, contornos
 js/renderer.js        compositor WebGL (stencil p/ máscaras invertidas, FBO p/ simulação)
@@ -233,10 +266,13 @@ js/calibration.js     padrões e assistente        js/recorder.js  MediaRecorder
 js/demo.js + room.js  demo residencial (sala 3D projetada em perspectiva)
 js/audio.js           áudio reativo                js/presets.js  presets
 js/capabilities.js    detecção de recursos e perfil de qualidade
+js/christmas.js       biblioteca de Natal: aba, importação sob demanda, modelo "Natal na sala"
+js/christmas-catalog.js  catálogo gerado (imagens, músicas, tamanhos)
+assets/natal/         35 imagens WebP + miniaturas + 3 músicas MP3
 demos/                vídeo de demonstração + projeto de exemplo (JSON)
 docs/manual/          manual do usuário (MANUAL.md + PDF + figuras)
 tests/                testes de unidade (Node) e E2E (Playwright)
-tools/                servidor local, gerador de vídeo, capturas, manual em PDF e ícones (só desenvolvimento)
+tools/                servidor local, gerador de vídeo, capturas, manual em PDF, ícones, arte e músicas de Natal (só desenvolvimento)
 ```
 
 **Como a perspectiva é feita:** para cada quadrilátero calcula-se a homografia *H* que leva o quadrado unitário de textura aos 4 cantos na saída. Cada vértice recebe `(U,V,W) = H⁻¹·(x,y,1)`, que é **linear no espaço da tela**; a GPU interpola linearmente e o fragment shader divide `U/W, V/W`, reproduzindo exatamente a projeção (o teste E2E confirma que o centro da textura cai no cruzamento das diagonais, o que uma interpolação bilinear não faz). Malhas usam uma homografia por célula; triângulos usam mapeamento afim; polígonos usam projeção planar com triangulação *ear clipping*.
@@ -245,10 +281,11 @@ tools/                servidor local, gerador de vídeo, capturas, manual em PDF
 
 Executados neste ambiente de desenvolvimento (Linux, Chromium do Playwright em modo *headless* com renderização por software SwiftShader):
 
-- **Unidade (Node `node --test`)** — 10/10: homografia vs. solução geral (DLT), inversa, ponto central = cruzamento das diagonais, interpolação (U,V,W) exata, triangulação de polígono côncavo, ordenação de cantos, malha, transformações.
-- **E2E (`node tests/e2e.mjs`)** — **61/61**, com o site servido em sub-caminho `/ProjectionMapping/` (como no GitHub Pages):
-  - Desktop 1440×900 (mouse/teclado): carrega sem erros nem 404; caminhos relativos; cria as 8 ferramentas de forma; arrasta vértice sem mover os demais; ajuste fino por setas; desfazer/refazer; **perspectiva verificada por pixels** (cantos coloridos e centro projetivo); **máscaras** normal e invertida verificadas por pixels; efeitos animando e 4 superfícies simultâneas; 23 shaders compilam; **importa PNG** (cores verificadas), **WebM** (reproduz em loop), **MP4 H.264** (reproduziu neste Chromium), **GIF** (animado via ImageDecoder); **salva no IndexedDB e recupera após recarregar**; exporta/importa JSON; aviso de mídia ausente; **janela do projetor** abre, sincroniza (latência medida 80–150 ms) e não contém interface; saída limpa; assistente de calibração com 6 passos; **demo** com as 7 cenas e ≥6 superfícies simultâneas; **gravação MediaRecorder** gerou arquivo; restauração do projeto ao sair da demo; console sem erros críticos.
+- **Unidade (Node `node --test`)** — 12/12: homografia vs. solução geral (DLT), inversa, ponto central = cruzamento das diagonais, interpolação (U,V,W) exata, triangulação de polígono côncavo, ordenação de cantos, malha, transformações, sub-quadrilátero em perspectiva (fogo da lareira) e catálogo de Natal (todo arquivo existe com o tamanho declarado).
+- **E2E (`node tests/e2e.mjs`)** — **70/70**, com o site servido em sub-caminho `/ProjectionMapping/` (como no GitHub Pages):
+  - Desktop 1440×900 (mouse/teclado): carrega sem erros nem 404; caminhos relativos; cria as 8 ferramentas de forma; arrasta vértice sem mover os demais; ajuste fino por setas; desfazer/refazer; **perspectiva verificada por pixels** (cantos coloridos e centro projetivo); **máscaras** normal e invertida verificadas por pixels; efeitos animando e 4 superfícies simultâneas; 31 shaders compilam; **importa PNG** (cores verificadas), **WebM** (reproduz em loop), **MP4 H.264** (reproduziu neste Chromium), **GIF** (animado via ImageDecoder); **salva no IndexedDB e recupera após recarregar**; exporta/importa JSON; aviso de mídia ausente; **janela do projetor** abre, sincroniza (latência medida 80–150 ms) e não contém interface; saída limpa; assistente de calibração com 6 passos; **demo** com as 7 cenas e ≥6 superfícies simultâneas; **gravação MediaRecorder** gerou arquivo; restauração do projeto ao sair da demo; console sem erros críticos.
   - **Aplicativo instalável**: diagnóstico de instalabilidade do Chrome sem erros, manifesto interpretado com id, atalhos, capturas e destino de compartilhamento; todos os ícones e as 16 telas de abertura do iOS carregam; **Compartilhar** (POST para o service worker) importa a imagem no app; o app abre **offline** após o primeiro acesso; o botão **Voltar** fecha janelas, painéis e a saída limpa sem sair do app.
+  - **Natal**: todas as 35 imagens, miniaturas e 3 músicas abrem com as dimensões/durações do catálogo; os 8 efeitos compilam, animam e os de camada têm fundo transparente; imagem vira superfície na proporção certa e o arquivo não é duplicado ao usar de novo (verificado no IndexedDB e por pixels); textura repetível aplicada com ✓; música vira trilha; **Lareira virtual** põe o fogo dentro da abertura; `?natal=1` abre o modelo com 14 superfícies e a **janela do projetor recebe as 3 mídias**; item apagado do aparelho é **baixado de novo** ao reabrir o projeto, sem aviso de mídia ausente.
   - **Robustez**: projeto JSON corrompido (clipes, keyframes, malha e tipos inválidos) é importado sem erros; `?new=1` cria projeto e limpa a URL.
   - Layout em **notebook 1366×768**, **monitor Full HD 1920×1080**, **iPad Pro 11** (vertical e horizontal), **Galaxy Tab S4**, **iPhone SE (320 px)** e **Galaxy S8 (360 px)**: sem rolagem/sobreposição, controles principais e menu visíveis.
   - Emulação de **iPhone 13 (vertical e horizontal)** e **Pixel 7** com toque: sem rolagem horizontal, controles visíveis, toque seleciona, **arrasto de vértice com o dedo**, **pinça faz zoom sem alterar a geometria**, painéis deslizantes, demo, saída limpa com aviso de limitações, console sem erros.

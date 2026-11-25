@@ -134,7 +134,8 @@ body.recording .rec-indicator { display: flex; }
 .panel.right { border-left: 1px solid var(--line); }
 .sheet-handle { display: none; }
 .left-tabs { display: flex; gap: 2px; padding: 6px; border-bottom: 1px solid var(--line); background: var(--bg-2); }
-.left-tabs button { flex: 1; display: flex; align-items: center; justify-content: center; gap: 6px; padding: 7px 4px; background: none; border: 0; border-radius: 7px; color: var(--muted); }
+.left-tabs button { flex: 1 1 auto; min-width: 0; display: flex; align-items: center; justify-content: center; gap: 5px; padding: 7px 3px; font-size: 12.5px; white-space: nowrap; background: none; border: 0; border-radius: 7px; color: var(--muted); }
+@media (max-width: 1365px) and (min-width: 901px) { .left-tabs button .ic { display: none; } .left-tabs button { padding: 7px 2px; } }
 .left-tabs button.on { background: var(--panel-3); color: var(--text); }
 .left-tabs button:hover { color: var(--text); }
 .tab-pane { flex: 1; overflow: auto; padding: 10px; min-height: 0; }
@@ -534,6 +535,7 @@ body.clean-output .viewport { background: #000; cursor: none; }
   body[data-sheet='layers'] #left-panel,
   body[data-sheet='effects'] #left-panel,
   body[data-sheet='media'] #left-panel,
+  body[data-sheet='natal'] #left-panel,
   body[data-sheet='props'] #inspector,
   body[data-sheet='timeline'] #panel-timeline { transform: none; visibility: visible; }
   .left-tabs button[data-tab] { display: none; }
@@ -667,4 +669,48 @@ body.has-install-banner .toasts { bottom: calc(96px + var(--safe-b)); }
 @media (pointer: coarse) {
   .input, .num, .select, select, input[type='text'], input[type='number'] { font-size: 16px; }
   .select.small { font-size: 14px; }
+}
+
+/* ---------------------------------------------------------------- Natal */
+.left-tabs button.tab-natal.on, .mobile-tabbar button.tab-natal.on { color: #ff6b7a; }
+.left-tabs button.tab-natal .ic { color: #3fd17a; }
+.xmas-hero {
+  margin: 10px 10px 4px; padding: 12px; border-radius: 12px;
+  background: radial-gradient(120% 140% at 0% 0%, rgba(214, 40, 57, 0.35), transparent 60%), radial-gradient(120% 140% at 100% 100%, rgba(29, 154, 69, 0.35), transparent 60%), var(--panel-2);
+  border: 1px solid var(--line); display: grid; gap: 10px;
+}
+.xmas-hero h3 { margin: 0 0 4px; font-size: 16px; display: flex; align-items: center; gap: 6px; }
+.xmas-hero h3 .ic { color: #3fd17a; }
+.xmas-hero p { margin: 0; color: var(--muted); font-size: 12.5px; line-height: 1.4; }
+.xmas-fx { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 6px; padding: 0 10px 6px; }
+.xmas-fx-btn { display: flex; align-items: center; gap: 8px; padding: 6px 8px; border-radius: 8px; border: 1px solid var(--line); background: var(--panel-2); color: var(--text); text-align: left; font-size: 12.5px; min-height: 38px; }
+.xmas-fx-btn:hover { border-color: var(--accent); }
+.xmas-swatch { width: 22px; height: 22px; border-radius: 6px; flex: none; box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.15); }
+.xmas-hint { margin: 2px 12px 6px; }
+.xmas-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px; padding: 0 10px 10px; }
+.xmas-card { border: 1px solid var(--line); border-radius: 10px; background: var(--panel-2); overflow: hidden; display: flex; flex-direction: column; min-width: 0; }
+.xmas-card.busy { opacity: 0.55; pointer-events: none; }
+.xmas-thumb {
+  position: relative; display: block; width: 100%; aspect-ratio: 4 / 3; padding: 0; border: 0; cursor: pointer; overflow: hidden;
+  background: repeating-conic-gradient(#232838 0 25%, #1b2030 0 50%) 0 0 / 16px 16px;
+}
+.xmas-thumb img { position: absolute; inset: 8px; width: calc(100% - 16px); height: calc(100% - 16px); object-fit: contain; transition: transform 0.15s; }
+.xmas-card.opaque .xmas-thumb img { inset: 0; width: 100%; height: 100%; object-fit: cover; }
+.xmas-thumb:hover img { transform: scale(1.05); }
+.xmas-info { padding: 6px 8px; display: grid; gap: 2px; min-width: 0; }
+.xmas-name { font-size: 12.5px; font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.xmas-actions { display: flex; align-items: center; justify-content: space-between; gap: 6px; }
+.xmas-actions .btn.small { min-height: 30px; padding: 4px 8px; }
+.xmas-card.music { grid-column: 1 / -1; flex-direction: row; align-items: center; gap: 8px; padding: 6px; }
+.xmas-card.music .xmas-info { flex: 1; padding: 0; }
+.xmas-card.music .xmas-actions { flex-direction: column; align-items: stretch; }
+.xmas-music-ic { width: 42px; height: 42px; border-radius: 10px; display: grid; place-items: center; flex: none; background: linear-gradient(135deg, #b80f25, #0f6b3a); color: #fff; }
+.xmas-credit-line { font-size: 10.5px; line-height: 1.3; }
+.xmas-credit { margin: 4px 12px 14px; line-height: 1.45; }
+.tag-natal { color: #3fd17a; font-weight: 600; }
+@media (max-width: 900px) {
+  .xmas-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+}
+@media (max-width: 420px) {
+  .xmas-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
 }

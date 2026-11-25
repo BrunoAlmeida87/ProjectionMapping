@@ -30,6 +30,7 @@
   "shortcuts": [
     { "name": "Demonstração", "short_name": "Demo", "description": "Sala virtual mapeada em 7 cenas", "url": "./index.html?demo=1", "icons": [{ "src": "assets/icons/shortcut-demo.png", "sizes": "96x96", "type": "image/png" }] },
     { "name": "Novo projeto", "short_name": "Novo", "description": "Começar um mapping do zero", "url": "./index.html?new=1", "icons": [{ "src": "assets/icons/shortcut-new.png", "sizes": "96x96", "type": "image/png" }] },
+    { "name": "Natal na sala", "short_name": "Natal", "description": "Modelo de Natal pronto: lareira, porta-presente, árvore de luzes, neve e música", "url": "./index.html?natal=1", "icons": [{ "src": "assets/icons/shortcut-natal.png", "sizes": "96x96", "type": "image/png" }] },
     { "name": "Saída do projetor", "short_name": "Projetor", "description": "Abrir a janela de projeção com o último projeto", "url": "./output.html", "icons": [{ "src": "assets/icons/shortcut-output.png", "sizes": "96x96", "type": "image/png" }] }
   ],
   "file_handlers": [

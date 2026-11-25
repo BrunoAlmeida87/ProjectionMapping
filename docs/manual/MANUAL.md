@@ -6,7 +6,7 @@ Este manual ensina a usar cada parte do LuzMap e mostra como o sistema funciona 
 
 - **Endereço do aplicativo:** https://brunoalmeida87.github.io/ProjectionMapping/
 - **Vídeo de demonstração:** botão **Assistir demonstração** no próprio site ou `demos/luzmap-demo.mp4` no repositório.
-- **Versão do manual:** 1.1 — novembro de 2026.
+- **Versão do manual:** 1.2 — novembro de 2026.
 
 > [!TIP]
 > **Como ler este manual.** Se você tem pressa, leia a Parte 1 (conceitos) e faça o tutorial do capítulo 6. Depois consulte os outros capítulos quando precisar. A Parte 4 é para quem quer entender o código; não é necessária para usar o sistema.
@@ -72,9 +72,9 @@ Na primeira visita aparece a janela de boas-vindas:
 
 *Figura 2 — Boas-vindas.*
 
-- **DEMO — Experimentar projection mapping:** abre uma sala virtual já mapeada e mostra os recursos em 7 cenas (capítulo 21). É a melhor forma de começar.
+- **DEMO — Experimentar projection mapping:** abre uma sala virtual já mapeada e mostra os recursos em 7 cenas (capítulo 22). É a melhor forma de começar.
 - **Assistir demonstração:** vídeo do aplicativo em uso.
-- **Assistente de calibração:** passo a passo para alinhar com o seu projetor (capítulo 16).
+- **Assistente de calibração:** passo a passo para alinhar com o seu projetor (capítulo 17).
 - **Começar em branco:** fecha a janela e deixa você no editor vazio.
 
 > [!NOTE]
@@ -94,7 +94,7 @@ Na primeira visita aparece a janela de boas-vindas:
 4. **Calibrar:** abre o painel de calibração e o assistente.
 5. **Saída do projetor:** opções para mandar a imagem ao projetor. Ao lado ficam **Blackout** (sol), **Gravar vídeo**, **Projetos**, **Ajuda**.
 6. **Menu:** todas as ações em uma lista (útil no celular).
-7. **Abas do painel esquerdo:** **Camadas**, **Efeitos** e **Mídia**.
+7. **Abas do painel esquerdo:** **Camadas**, **Efeitos**, **Mídia** e **Natal** (capítulo 14).
 8. **Barra de ferramentas:** selecionar, mover a vista e as ferramentas de desenho (capítulo 8). Os dois botões de baixo ligam o **ímã** e a **grade**.
 9. **Controles da vista:** afastar, enquadrar, aproximar, **Simulação** (casinha) e **nomes** das superfícies.
 10. **Palco:** a área da saída. Aqui você desenha e ajusta as superfícies.
@@ -149,12 +149,12 @@ Ao marcar o quarto ponto, a superfície é criada com a **grade de calibração*
 
 **Passo 6 — Ajuste a aparência.** Em **Propriedades → Conteúdo**, mude velocidade, cores e intensidade. Em **Aparência e cor**, experimente **Borda suave** para esfumar as bordas.
 
-**Passo 7 — Mande para o projetor.** Clique em **Saída do projetor → Abrir janela do projetor**, leve a janela para a tela do projetor e pressione **F** para tela cheia (capítulo 17).
+**Passo 7 — Mande para o projetor.** Clique em **Saída do projetor → Abrir janela do projetor**, leve a janela para a tela do projetor e pressione **F** para tela cheia (capítulo 18).
 
-**Passo 8 — Salve.** O projeto é salvo sozinho a cada alteração. Para garantir, use **Ctrl+S**. Para levar a outro aparelho, exporte em JSON (capítulo 19).
+**Passo 8 — Salve.** O projeto é salvo sozinho a cada alteração. Para garantir, use **Ctrl+S**. Para levar a outro aparelho, exporte em JSON (capítulo 20).
 
 > [!TIP]
-> Repita os passos 3 a 5 para cada objeto: um quadrilátero para a frente do armário, outro para a estante e assim por diante. Depois use máscaras (capítulo 14) para impedir que a luz da parede caia sobre os móveis.
+> Repita os passos 3 a 5 para cada objeto: um quadrilátero para a frente do armário, outro para a estante e assim por diante. Depois use máscaras (capítulo 15) para impedir que a luz da parede caia sobre os móveis.
 
 ## 7. Usando no celular e no tablet
 
@@ -166,7 +166,7 @@ No celular o LuzMap tem uma interface própria, pensada para o toque:
 
 *Figura 11 — Os painéis sobem de baixo e o palco se ajusta para continuar visível.*
 
-- **Barra inferior:** **Camadas, Efeitos, Mídia, Ajustes** (propriedades) e **Timeline**. Toque uma vez para abrir o painel e outra vez para fechar. Arraste a alça do painel para baixo para fechar ou para cima para expandir.
+- **Barra inferior:** **Camadas, Efeitos, Mídia, Natal, Ajustes** (propriedades) e **Timeline**. Toque uma vez para abrir o painel e outra vez para fechar. Arraste a alça do painel para baixo para fechar ou para cima para expandir.
 - **Barra superior:** menu, nome do projeto, **DEMO**, saída, desfazer, refazer e tocar/pausar.
 - **Ferramentas:** ficam numa barra horizontal na parte de baixo do palco (deslize para ver todas).
 - **Gestos:**
@@ -179,7 +179,7 @@ No celular o LuzMap tem uma interface própria, pensada para o toque:
 - Tocar numa camada da lista abre direto o painel **Ajustes** daquela superfície.
 - O botão **Voltar** do Android (ou o gesto de voltar) fecha o painel ou a janela que estiver aberta.
 
-Para projetar a partir do celular, veja o capítulo 17. Para usar o LuzMap como um aplicativo, com ícone na tela inicial e em tela cheia, veja o capítulo 23.
+Para projetar a partir do celular, veja o capítulo 18. Para usar o LuzMap como um aplicativo, com ícone na tela inicial e em tela cheia, veja o capítulo 24.
 
 ---
 
@@ -198,7 +198,7 @@ Para projetar a partir do celular, veja o capítulo 17. Para usar o LuzMap como 
 | **Círculo** (C) | Arraste (fica redondo na saída) ou um clique (tamanho padrão) | Espelhos, relógios, luminárias redondas. |
 | **Elipse** (E) | Arraste | Formas ovais. |
 | **Malha** (W) | Arraste | Superfícies curvas ou irregulares (coluna, cortina, parede arredondada): a malha tem pontos internos que podem ser puxados individualmente. |
-| **Máscara** (M) | Cliques como no polígono **ou** arraste (máscara retangular) | Esconder áreas (capítulo 14). |
+| **Máscara** (M) | Cliques como no polígono **ou** arraste (máscara retangular) | Esconder áreas (capítulo 15). |
 
 Durante o desenho: **Esc** cancela, **Delete** desfaz o último ponto. Depois de criar a superfície, a ferramenta volta sozinha para **Selecionar**.
 
@@ -270,7 +270,7 @@ O painel muda conforme a seleção. Com uma superfície selecionada ele tem as s
 
 **Áudio reativo.** O controle **Reação ao som** faz a intensidade do efeito acompanhar o volume (do microfone ou da trilha sonora). Veja o capítulo 13.
 
-**Animação e timeline.** Valores animáveis (deslocamento X/Y, escala, rotação e intensidade do efeito; a opacidade fica em Aparência) com o botão **◆** para gravar keyframes, além da lista de **clipes**. Detalhes no capítulo 15.
+**Animação e timeline.** Valores animáveis (deslocamento X/Y, escala, rotação e intensidade do efeito; a opacidade fica em Aparência) com o botão **◆** para gravar keyframes, além da lista de **clipes**. Detalhes no capítulo 16.
 
 **Quando nada está selecionado,** o painel mostra o **projeto**: nome, resolução da saída, foto de referência e simulação, duração e loop da timeline e o perfil de desempenho (figura 5).
 
@@ -278,7 +278,7 @@ O painel muda conforme a seleção. Com uma superfície selecionada ele tem as s
 
 O LuzMap gera todos os efeitos em tempo real pela placa de vídeo, por isso eles não pesam como arquivos de vídeo, se adaptam a qualquer formato de superfície e mudam na hora quando você mexe nos parâmetros.
 
-![Os 23 efeitos da biblioteca](../../assets/screenshots/effects-library.jpg)
+![Os 31 efeitos da biblioteca](../../assets/screenshots/effects-library.jpg)
 
 *Figura 14 — A biblioteca completa, na ordem da tabela abaixo (da esquerda para a direita, de cima para baixo).*
 
@@ -309,6 +309,7 @@ O LuzMap gera todos os efeitos em tempo real pela placa de vídeo, por isso eles
 | Xadrez | Quadriculado | Conferir a perspectiva |
 | Barras de cor | Barras e rampa de cinza | Ajustar cor/brilho do projetor |
 | Cor sólida | Uma cor só (branco = luz pura) | Iluminar objetos, testar |
+| Neve caindo · Pisca-pisca · Listras de bengala · Papel de presente · Noite de Natal · Flocos gigantes · Árvore de luzes · Brilho dourado | Os 8 efeitos da categoria **Natal** (últimas duas linhas da figura) | Veja o capítulo 14 |
 
 **Parâmetros comuns** (cada efeito mostra só os que usa, às vezes com nomes mais específicos):
 
@@ -332,6 +333,8 @@ O LuzMap gera todos os efeitos em tempo real pela placa de vídeo, por isso eles
 - **Ambiente espacial** — galáxia na parede inteira;
 - **Projeção geométrica** — cria três formas: triângulo com colmeia, quadrado com túnel 3D e triângulo com linhas.
 
+Logo abaixo ficam os **Presets de Natal** (Árvore de luzes, Porta-presente, Lareira virtual, Janela com neve, Parede “Feliz Natal”, Pisca-pisca no teto e Coluna de bengala), explicados no capítulo 14.
+
 ## 13. Mídia: imagens, vídeos, GIFs e áudio
 
 **Importar:** aba **Mídia → Importar arquivos**, clique na área tracejada ou **arraste arquivos para qualquer lugar da janela**. Se você soltar uma imagem ou vídeo em cima de uma superfície, ela é aplicada ali.
@@ -353,9 +356,105 @@ Cada item da lista tem botões:
 
 **Trilha sonora e áudio reativo:** um áudio definido como trilha toca sincronizado com a timeline. Ele, o som dos vídeos ou o **microfone** (menu → *Áudio reativo: usar microfone*) alimentam o **áudio reativo**: superfícies com **Reação ao som** maior que zero pulsam com a música. O efeito **Pulso / estrobo** foi feito para isso.
 
-**Mídia ausente:** um projeto guarda só a *referência* ao arquivo. Se você abrir o projeto em outro aparelho (ou apagar a mídia), o item aparece como **Arquivo ausente — importe novamente**, e o app avisa ao abrir o projeto. Para levar as mídias junto, use **Exportar com mídias** (capítulo 19).
+**Mídia ausente:** um projeto guarda só a *referência* ao arquivo. Se você abrir o projeto em outro aparelho (ou apagar a mídia), o item aparece como **Arquivo ausente — importe novamente**, e o app avisa ao abrir o projeto. Para levar as mídias junto, use **Exportar com mídias** (capítulo 20). A exceção são os itens da **biblioteca de Natal**: o app os baixa de novo sozinho (capítulo 14).
 
-## 14. Máscaras
+## 14. Natal: imagens, efeitos, músicas e um modelo pronto
+
+A aba **Natal** (no celular, o botão **Natal** da barra inferior) junta tudo o que é preciso para uma projeção de fim de ano: um **modelo completo** para começar, **35 imagens** desenhadas para o LuzMap, **8 efeitos animados**, **7 montagens prontas** e **3 músicas**. Nada disso exige saber desenhar ou editar vídeo: você escolhe o item, ele vira uma superfície, e você encaixa os cantos no objeto real como em qualquer outro mapping.
+
+![O modelo “Natal na sala” aberto no editor, com a aba Natal à esquerda](../../assets/screenshots/natal-sala.jpg)
+
+*Figura 15 — O modelo “Natal na sala”: lareira no armário, porta-presente, árvore de luzes na estante, pisca-pisca, letreiro, neve, toalha xadrez e flocos no piso.*
+
+### O modelo “Natal na sala”
+
+O botão **Abrir modelo: Natal na sala** (topo da aba Natal, ou **Menu → Natal: abrir modelo**) cria um projeto novo sobre a mesma sala da demonstração (capítulo 22). O projeto atual é salvo antes. O modelo é um projeto comum: tudo pode ser editado, apagado ou duplicado.
+
+| Superfície | O que mostra |
+|---|---|
+| Parede | Céu de Natal com a estrela-guia na primeira metade; flocos gigantes na segunda. |
+| Neve caindo (camada) | Neve com fundo transparente, por cima da parede. |
+| Pisca-pisca | Cordão de lâmpadas coloridas no alto da parede. |
+| Letreiro Feliz Natal + Brilhos | A imagem do letreiro, que aparece suavemente (keyframe de opacidade), e cintilações por cima (mistura *adicionar*). |
+| Porta-presente | Papel de presente vermelho com fita dourada; na segunda metade, verde com fita vermelha. |
+| Armário — lareira + Fogo da lareira | A imagem da lareira no armário e o efeito **Fogo** dentro da abertura (mistura *tela*). |
+| Estante — árvore de luzes | Árvore de luzes em espiral, com estrela no topo. |
+| Mesa — toalha xadrez | Textura xadrez repetida, em perspectiva sobre o tampo. |
+| Piso — flocos | Flocos de neve com fundo azul escuro e borda suave. |
+| 3 máscaras | Impedem que a parede e o piso iluminem o armário, a estante e a mesa. |
+
+A **trilha sonora** é *Jingle Bells*, e a timeline tem a duração da música (69 s, em loop). O modelo abre com a **Simulação** ligada, para você ver a luz sobre a sala.
+
+**Para usar na sua casa:** desligue a Simulação, abra a saída do projetor e arraste os cantos de cada superfície até os seus objetos (capítulo 9). Apague o que não existir aí, por exemplo a mesa, e redesenhe as máscaras se os seus móveis forem diferentes (capítulo 15). Se você tiver uma foto do ambiente, use-a como foto de referência (capítulo 19).
+
+### A biblioteca
+
+![As 35 imagens da biblioteca de Natal](../../assets/screenshots/natal-arte.jpg)
+
+*Figura 16 — As 35 imagens da biblioteca, por categoria.*
+
+| Categoria | Itens | Fundo |
+|---|---|---|
+| **Enfeites** | Árvore de Natal, estrela dourada, estrela-guia, bolas vermelha, dourada e azul, guirlanda, laço, sinos, bengala doce, presentes vermelho e verde, pilha de presentes, boneco de neve, floco de neve, gorro, meia, azevinho, vela, casinha e biscoito de gengibre, presépio (silhueta dourada) | Transparente |
+| **Faixas e molduras** | Cordão de luzes, festão de pinheiro, moldura natalina (centro vazado), neve com pingentes de gelo | Transparente |
+| **Letreiros** | Feliz Natal, Boas Festas, Feliz Ano Novo | Transparente |
+| **Cenários** | Noite de neve na vila, lareira | Opaco |
+| **Texturas** | Papel de presente vermelho e verde, xadrez natalino, flocos no azul — repetem sem emenda | Opaco |
+| **Músicas** | *Jingle Bells* (69 s), *Noite Feliz* (53 s), *We Wish You a Merry Christmas* (45 s) | — |
+
+**Como usar uma imagem:**
+
+- **toque na miniatura:** a imagem vira uma **nova superfície** no centro, já na proporção certa (a árvore fica em pé, o letreiro fica largo). Depois arraste os cantos até o objeto real;
+- **✓ (abaixo da miniatura):** coloca a imagem na **superfície selecionada**. Imagens com fundo transparente entram em modo *conter* (inteiras, sem cortar); cenários entram em *cobrir*; texturas entram em **repetição** com escala 0,5, e você muda a escala em **Propriedades → Conteúdo**.
+
+O fundo transparente significa que só o desenho recebe luz: em volta dele o projetor fica apagado. Por isso uma estrela ou uma guirlanda podem ficar por cima de outras superfícies.
+
+**Como usar uma música:** **Ouvir** toca uma prévia; **Usar** transforma a música na **trilha sonora** do projeto. Ela toca junto com a timeline e alimenta o áudio reativo (capítulo 13).
+
+### Efeitos de Natal
+
+| Aba Natal no celular | Os 8 efeitos de Natal |
+|---|---|
+| ![A aba Natal no celular](../../assets/screenshots/natal-celular.jpg) | ![Neve caindo, pisca-pisca, listras de bengala, papel de presente, noite de Natal, flocos gigantes, árvore de luzes e brilho dourado](../../assets/screenshots/natal-efeitos.jpg) |
+
+*Figura 17 — À esquerda, a aba Natal no celular. À direita, os efeitos na ordem da tabela, da esquerda para a direita e de cima para baixo.*
+
+Os efeitos de Natal aparecem na aba Natal e também na aba **Efeitos**, na categoria **Natal**. Eles funcionam como os outros efeitos (capítulo 12):
+
+| Efeito | O que faz | Dica |
+|---|---|---|
+| **Neve caindo** | Flocos em camadas, com vento | **Fundo (opacidade)** em 0 deixa só a neve: coloque por cima de outra superfície. |
+| **Pisca-pisca** | Cordões de lâmpadas coloridas que piscam em sequência | **Cordões** define quantas fileiras; **Curvatura do fio**, o quanto o fio cai. |
+| **Listras de bengala** | Listras vermelhas e brancas deslizando | Colunas, batentes, pés de mesa. |
+| **Papel de presente** | Estampa com fita, laço e brilhos | Portas e frentes de armário. **Fita e laço** em 0 deixa só o papel. |
+| **Noite de Natal** | Céu estrelado, estrela-guia, estrelas cadentes e colinas de neve | Parede inteira. **Colinas de neve** em 0 tira as colinas. |
+| **Flocos gigantes** | Cristais de neve girando devagar | Paredes e piso. Fundo em 0 = transparente. |
+| **Árvore de luzes** | Árvore em espiral de luzes, com estrela | Uma superfície alta: a árvore se ajusta ao formato. |
+| **Brilho dourado** | Cintilações que acendem e apagam | Por cima de letreiros e enfeites, com mistura **adicionar**. |
+
+### Montagens prontas
+
+As montagens ficam na aba Natal e na aba Efeitos (**Presets de Natal**). Assim como os outros presets, sem nada selecionado elas criam superfícies novas, e com uma superfície selecionada elas mudam só o conteúdo dela:
+
+- **Árvore de luzes** — a árvore em espiral numa superfície alta;
+- **Porta-presente** — embrulha a porta (ou um armário) com papel, fita e laço;
+- **Lareira virtual** — a imagem da lareira e o **fogo animado dentro da abertura**. Com uma superfície selecionada (um armário, um painel), ela vira a lareira e o fogo é criado em perspectiva no lugar exato da abertura;
+- **Janela com neve** — neve caindo sobre um céu noturno, com borda suave;
+- **Parede “Feliz Natal”** — noite de Natal na parede inteira, neve por cima e o letreiro com brilhos;
+- **Pisca-pisca no teto** — uma faixa de lâmpadas no alto da parede;
+- **Coluna de bengala** — listras de bengala numa faixa alta e estreita.
+
+> [!TIP]
+> **Receitas rápidas.** *Porta de presente:* quadrilátero nos 4 cantos da porta → **Porta-presente**. *Árvore numa parede vazia:* **Árvore de Natal** (imagem) e, por cima, **Brilho dourado** com mistura *adicionar*. *Janela que neva:* quadrilátero no vidro → **Neve caindo**. *Moldura num quadro ou na TV:* **Moldura natalina** e arraste os cantos até a borda do objeto (o centro fica apagado).
+
+### Onde ficam os arquivos e quem pode usá-los
+
+- Os itens **só são baixados quando você usa** (as miniaturas já vêm com o app). Depois disso ficam salvos no aparelho, junto com as suas mídias, e **funcionam offline**.
+- Usar o mesmo item de novo **não duplica o arquivo**.
+- Se você abrir em outro aparelho um projeto que usa itens de Natal, o LuzMap **baixa esses itens de novo sozinho**. Não aparece o aviso de mídia ausente.
+- Toda a arte foi desenhada para o LuzMap (em vetores, depois convertidos para WebP) e segue a **licença MIT** do projeto: pode ser usada, projetada e gravada à vontade. As músicas usam melodias de **domínio público** (*Jingle Bells*, J. L. Pierpont, 1857; *Noite Feliz*, F. X. Gruber, 1818; *We Wish You a Merry Christmas*, tradicional inglesa), com arranjos sintetizados pelo próprio LuzMap, sem gravações de terceiros.
+
+## 15. Máscaras
 
 Uma máscara é uma forma que **pinta de preto tudo o que está abaixo dela na lista de camadas**. Preto, para o projetor, significa “sem luz”. Ela serve para:
 
@@ -365,13 +464,13 @@ Uma máscara é uma forma que **pinta de preto tudo o que está abaixo dela na l
 
 ![Como as máscaras funcionam na ordem das camadas](img/camadas.svg)
 
-*Figura 15 — A máscara fica entre a parede e o armário: a parede é escurecida atrás do móvel, o armário (acima da máscara) não é afetado.*
+*Figura 18 — A máscara fica entre a parede e o armário: a parede é escurecida atrás do móvel, o armário (acima da máscara) não é afetado.*
 
 | No editor (máscara selecionada) | O que vai para o projetor |
 |---|---|
 | ![Máscara selecionada no editor, com hachuras vermelhas](img/13-mascara-editor.jpg) | ![Saída pura: preto onde há máscara](img/14-mascara-saida.jpg) |
 
-*Figura 16 — No editor, as máscaras aparecem com hachuras vermelhas para você enxergá-las. Na saída, são simplesmente preto.*
+*Figura 19 — No editor, as máscaras aparecem com hachuras vermelhas para você enxergá-las. Na saída, são simplesmente preto.*
 
 **Como criar:** ferramenta **Máscara** (M) — cliques para um polígono ou arraste para um retângulo —, o botão **Máscara** do painel de camadas, ou a chave **Conteúdo | Máscara** de qualquer superfície.
 
@@ -383,11 +482,11 @@ Uma máscara é uma forma que **pinta de preto tudo o que está abaixo dela na l
 > [!IMPORTANT]
 > A máscara só afeta o que está **abaixo** dela na lista. Se ela não estiver escondendo algo, confira a ordem das camadas: a máscara precisa ficar acima da superfície a ser escondida.
 
-## 15. Timeline: tocar, clipes e keyframes
+## 16. Timeline: tocar, clipes e keyframes
 
 ![Timeline da demonstração](img/15-timeline.jpg)
 
-*Figura 17 — Timeline com clipes (barras roxas) e a agulha (linha rosa).*
+*Figura 20 — Timeline com clipes (barras roxas) e a agulha (linha rosa).*
 
 **Transporte:**
 
@@ -399,7 +498,7 @@ Uma máscara é uma forma que **pinta de preto tudo o que está abaixo dela na l
 | Velocidade | 0,25× a 4× |
 | Loop | Repetir ao chegar ao fim |
 | Lupas | Zoom da timeline (ou Ctrl + roda do mouse) |
-| Gravar | Abre o gravador (capítulo 20) |
+| Gravar | Abre o gravador (capítulo 21) |
 
 **Agulha:** arraste na régua (números de tempo) para ir a qualquer instante. A duração do projeto fica em **Propriedades do projeto → Timeline**.
 
@@ -427,7 +526,7 @@ Os keyframes aparecem como **losangos amarelos** na trilha: clique para ir até 
 > [!NOTE]
 > Os efeitos usam um relógio contínuo. Quando a timeline recomeça (loop), clipes e keyframes voltam ao início, mas a animação interna dos efeitos não dá “saltos”.
 
-## 16. Calibração
+## 17. Calibração
 
 A calibração serve para alinhar o virtual com o real. Clique em **Calibrar** na barra superior: abre um painel flutuante que não bloqueia o editor, então você pode arrastar vértices com ele aberto.
 
@@ -435,7 +534,7 @@ A calibração serve para alinhar o virtual com o real. Clique em **Calibrar** n
 |---|---|
 | ![Assistente de calibração no passo 4](img/16-calibracao-assistente.jpg) | ![Calibração avançada: padrões e opções](img/17-calibracao-avancado.jpg) |
 
-*Figura 18 — O painel de calibração.*
+*Figura 21 — O painel de calibração.*
 
 **Assistente em 6 passos:**
 
@@ -455,26 +554,26 @@ A calibração serve para alinhar o virtual com o real. Clique em **Calibrar** n
 
 ![Calibração na tela: grade, contornos e marcadores](img/18-calibracao-tela.jpg)
 
-*Figura 19 — Grade de tela inteira com contornos e marcadores. A porta (selecionada) aparece em amarelo.*
+*Figura 22 — Grade de tela inteira com contornos e marcadores. A porta (selecionada) aparece em amarelo.*
 
 Ao fechar o painel, padrões, contornos e marcadores são desligados.
 
 > [!TIP]
 > **Dicas de alinhamento:** comece pelas superfícies maiores (parede), depois as menores. Use o padrão **Branco** para enxergar bem as bordas físicas. Se sobrar um fio de luz na borda, use **Borda suave** de 2 a 6 pixels ou recue o vértice 1 pixel.
 
-## 17. Saída para o projetor
+## 18. Saída para o projetor
 
 O botão **Saída do projetor** (tecla **O** no computador) oferece:
 
 ![Menu de saída para projetor](img/19-menu-saida.jpg)
 
-*Figura 20 — As opções de saída.*
+*Figura 23 — As opções de saída.*
 
 **1. Abrir janela do projetor** (computador). Abre uma janela separada que mostra **somente a composição**, em fundo preto, sem menus, alças ou grade. Você continua editando na tela principal e cada alteração aparece na projeção em uma fração de segundo.
 
 ![Janela do projetor: só a composição, em fundo preto](../../assets/screenshots/projector-output.jpg)
 
-*Figura 21 — A janela de saída.*
+*Figura 24 — A janela de saída.*
 
 Na janela de saída:
 
@@ -513,7 +612,7 @@ Navegadores de celular **não conseguem controlar duas telas separadas**: o celu
 > [!WARNING]
 > **iPhone:** o Safari não deixa páginas entrarem em tela cheia (só vídeos). Para ocupar a tela toda, toque em Compartilhar → **Adicionar à Tela de Início** e abra o LuzMap pelo ícone criado.
 
-## 18. Foto de referência e simulação
+## 19. Foto de referência e simulação
 
 Você pode planejar todo o mapping **antes de ligar o projetor**:
 
@@ -526,11 +625,11 @@ Você pode planejar todo o mapping **antes de ligar o projetor**:
 |---|---|
 | ![Modo simulação](img/20-simulacao.jpg) | ![Saída pura](img/20b-saida-pura.jpg) |
 
-*Figura 22 — À esquerda, como a sala ficaria iluminada; à direita, a imagem que realmente sai do projetor.*
+*Figura 25 — À esquerda, como a sala ficaria iluminada; à direita, a imagem que realmente sai do projetor.*
 
 A simulação escurece a foto (como uma sala com a luz apagada) e soma a luz projetada respeitando a cor de cada superfície — objetos claros refletem mais. A foto **nunca é enviada ao projetor**. Sem foto, a simulação usa um fundo cinza neutro.
 
-## 19. Projetos: salvar, abrir, exportar
+## 20. Projetos: salvar, abrir, exportar
 
 **Salvamento automático:** toda alteração é salva cerca de 1,5 segundo depois, no próprio navegador. O selo ao lado do nome mostra o estado. **Ctrl+S** salva na hora e atualiza a miniatura.
 
@@ -538,7 +637,7 @@ A simulação escurece a foto (como uma sala com a luz apagada) e soma a luz pro
 
 ![Janela de projetos](img/21-projetos.jpg)
 
-*Figura 23 — Projetos salvos neste dispositivo.*
+*Figura 26 — Projetos salvos neste dispositivo.*
 
 Na janela **Projetos** (clique no nome do projeto ou use Ctrl+O):
 
@@ -556,11 +655,11 @@ Na janela **Projetos** (clique no nome do projeto ou use Ctrl+O):
 
 Também é possível arrastar um arquivo `.luzmap.json` para a janela. O repositório traz um exemplo: `demos/exemplo-sala.luzmap.json` (a sala da demonstração).
 
-## 20. Gravar vídeo
+## 21. Gravar vídeo
 
 ![Janela do gravador](img/22-gravador.jpg)
 
-*Figura 24 — Opções de gravação. Só aparecem os formatos que o seu navegador realmente consegue gravar.*
+*Figura 27 — Opções de gravação. Só aparecem os formatos que o seu navegador realmente consegue gravar.*
 
 Abra pelo botão **Gravar** da timeline (ou pelo ícone de câmera na barra superior):
 
@@ -575,13 +674,13 @@ Durante a gravação aparece o selo **REC** com o botão **Parar**. No fim, uma 
 - **GRAVAR DEMONSTRAÇÃO:** inicia a demo e grava os 60 segundos completos em 1280 × 720, com a simulação da sala; o arquivo é oferecido para download ao final.
 - **Gravar a tela (com interface):** no computador, grava a aba ou a tela inteira, incluindo o editor — útil para tutoriais.
 
-## 21. O modo DEMO
+## 22. O modo DEMO
 
 O botão **DEMO — Experimentar projection mapping** carrega uma sala de estar virtual — **parede, piso, porta, armário, estante e mesa**, desenhados em perspectiva real — já mapeada com 9 superfícies (6 de conteúdo e 3 máscaras), e toca uma apresentação de 60 segundos em 7 cenas:
 
 ![As 7 cenas da demonstração](img/23-demo-cenas.jpg)
 
-*Figura 25 — Cenas 1 a 7, da esquerda para a direita e de cima para baixo.*
+*Figura 28 — Cenas 1 a 7, da esquerda para a direita e de cima para baixo.*
 
 | Cena | Início | O que mostra |
 |---|---|---|
@@ -598,7 +697,7 @@ O botão **DEMO — Experimentar projection mapping** carrega uma sala de estar 
 > [!TIP]
 > **Aprenda com a demo:** clique em **Editar**. A sala vira um projeto normal e editável (“Minha sala (a partir da demo)”) e você pode examinar como cada clipe, máscara e keyframe foi montado. **Sair** volta ao projeto que estava aberto antes.
 
-## 22. Desempenho e qualidade
+## 23. Desempenho e qualidade
 
 Os efeitos são calculados pela GPU para cada pixel, a cada quadro. Em aparelhos modestos isso pesa; por isso há **perfis de qualidade** (Propriedades do projeto → Desempenho):
 
@@ -618,7 +717,7 @@ A barra de status mostra os fps atuais. O LuzMap desenha **só quando algo muda 
 - **Borda suave** em polígonos é mais cara que em quadriláteros;
 - se a placa de vídeo “reiniciar” (perda de contexto WebGL), o LuzMap avisa e recupera a imagem sozinho.
 
-## 23. Instalar como aplicativo (Android, iPhone e computador)
+## 24. Instalar como aplicativo (Android, iPhone e computador)
 
 O LuzMap é um **aplicativo web instalável** (PWA): você o instala direto do site, sem loja de aplicativos, sem cadastro e de graça. Instalado, ele ganha:
 
@@ -626,7 +725,7 @@ O LuzMap é um **aplicativo web instalável** (PWA): você o instala direto do s
 - **janela própria, sem as barras do navegador** — no iPhone, é assim que a tela cheia funciona;
 - **funcionamento offline** depois do primeiro acesso;
 - **tela sempre ligada** enquanto a timeline toca ou durante a saída limpa;
-- **atalhos** (no Android e no computador, toque e segure o ícone): *Demonstração*, *Novo projeto* e *Saída do projetor*;
+- **atalhos** (no Android e no computador, toque e segure o ícone): *Demonstração*, *Novo projeto*, *Natal na sala* e *Saída do projetor*;
 - **tela de abertura** com o logotipo no iPhone e no iPad.
 
 **Como instalar.** O LuzMap mostra o caminho certo para cada aparelho:
@@ -641,7 +740,7 @@ Quando o navegador oferece instalação direta (Chrome, Edge e Samsung Internet)
 |---|---|---|
 | ![Aviso de instalação no celular](img/27-instalar-banner.jpg) | ![Guia de instalação no iPhone](img/28-instalar-iphone.jpg) | ![Guia de instalação no Android](img/29-instalar-android.jpg) |
 
-*Figura 26 — Instalação guiada.*
+*Figura 29 — Instalação guiada.*
 
 - **iPhone e iPad (Safari):** botão **Compartilhar** (quadrado com seta para cima) → **Adicionar à Tela de Início** → **Adicionar**. Desde o iOS 16.4 o mesmo caminho funciona no Chrome, no Edge e no Firefox do iPhone.
 - **Android (Chrome, Edge, Samsung Internet):** **Instalar** no aviso, ou menu **⋮ → Instalar app**.
@@ -664,11 +763,11 @@ Quando o navegador oferece instalação direta (Chrome, Edge e Samsung Internet)
 
 Esta parte é para quem quer entender o código ou modificá-lo. O LuzMap é escrito em HTML, CSS e JavaScript puros (módulos ES), **sem bibliotecas externas e sem etapa de compilação**: os arquivos do repositório são exatamente os que o navegador executa.
 
-## 24. Arquitetura: quem faz o quê
+## 25. Arquitetura: quem faz o quê
 
 ![Diagrama da arquitetura com os módulos agrupados](img/arquitetura.svg)
 
-*Figura 27 — Módulos do sistema.*
+*Figura 30 — Módulos do sistema.*
 
 | Arquivo | Papel |
 |---|---|
@@ -678,7 +777,7 @@ Esta parte é para quem quer entender o código ou modificá-lo. O LuzMap é esc
 | `js/state.js` | O **modelo de dados**: projeto, superfícies, clipes, keyframes; cálculo do que cada superfície mostra em cada instante; desfazer/refazer. |
 | `js/mapping.js` | Matemática: homografia, triangulação de polígonos, malhas e contornos. |
 | `js/renderer.js`, `js/gl.js` | O motor gráfico WebGL que desenha a composição em qualquer tela (editor, projetor, gravador, miniaturas). |
-| `shaders/common.js`, `shaders/effects.js` | Programas que rodam na GPU: a etapa comum de cada superfície e os 23 efeitos. |
+| `shaders/common.js`, `shaders/effects.js` | Programas que rodam na GPU: a etapa comum de cada superfície e os 31 efeitos. |
 | `js/effects.js`, `js/presets.js` | Catálogo de efeitos (nomes, parâmetros, valores padrão) e presets. |
 | `js/media.js`, `js/audio.js` | Importação e reprodução de imagens, GIFs, vídeos e áudio; análise de som. |
 | `js/storage.js` | Banco de dados local (IndexedDB) para projetos e mídias. |
@@ -689,6 +788,7 @@ Esta parte é para quem quer entender o código ou modificá-lo. O LuzMap é esc
 | `js/recorder.js` | Gravação de vídeo. |
 | `js/demo.js`, `js/room.js` | A demonstração e a sala 3D. |
 | `js/capabilities.js` | Detecta o que o navegador suporta e escolhe o perfil de qualidade. |
+| `js/christmas.js`, `js/christmas-catalog.js`, `assets/natal/` | Biblioteca de Natal: a aba Natal, o download sob demanda dos itens, o modelo “Natal na sala” e o catálogo (imagens WebP, miniaturas e músicas). |
 | `js/install.js` | Instalação como aplicativo: diálogo do navegador, guias do iPhone/Android, aviso no celular. |
 | `js/backstack.js` | Faz o botão Voltar fechar janelas, painéis e a saída limpa. |
 | `sw.js` | Service worker: funcionamento offline (rede primeiro, cópia local quando não há internet) e recebimento de arquivos compartilhados. |
@@ -706,13 +806,13 @@ Esta parte é para quem quer entender o código ou modificá-lo. O LuzMap é esc
 
 **Desfazer/refazer.** Antes de cada alteração o projeto inteiro é fotografado como texto (JSON). Desfazer é voltar à foto anterior. Arrastos e movimentos de slider viram uma única etapa, e o histórico guarda até 120 passos.
 
-## 25. A correção de perspectiva, explicada
+## 26. A correção de perspectiva, explicada
 
 Imagine o conteúdo (uma imagem, um vídeo, um efeito) como um quadrado de borracha com uma grade desenhada. Você prende os quatro cantos nos quatro vértices da superfície. Há duas formas de esticar a borracha:
 
 ![Comparação entre o conteúdo original, uma distorção simples e a homografia](img/homografia.svg)
 
-*Figura 28 — Os mesmos 4 cantos, duas distorções diferentes.*
+*Figura 31 — Os mesmos 4 cantos, duas distorções diferentes.*
 
 - **Distorção simples (interpolação linear):** divide cada borda em partes iguais. O centro do conteúdo fica na média dos quatro cantos. Parece aceitável, mas **não é como uma superfície real aparece em perspectiva**: numa porta vista de lado, o lado mais distante parece menor e as linhas se aproximam.
 - **Homografia (o que o LuzMap usa):** a transformação exata de um plano visto em perspectiva, a mesma da fotografia. As linhas se aproximam no lado “distante” e o **centro do conteúdo cai no cruzamento das diagonais** — como acontece quando você fotografa um quadro de lado.
@@ -728,7 +828,7 @@ Imagine o conteúdo (uma imagem, um vídeo, um efeito) como um quadrado de borra
 - **Polígono:** é dividido em triângulos (algoritmo *ear clipping*), e o conteúdo é aplicado “de frente”, proporcional ao retângulo que envolve o polígono.
 - **Círculo e elipse:** são quadriláteros com homografia; o programa da GPU recorta o formato redondo dentro do quadrado de conteúdo.
 
-## 26. Como cada quadro é desenhado
+## 27. Como cada quadro é desenhado
 
 Para cada superfície, de baixo para cima na lista de camadas, o renderizador (`js/renderer.js`):
 
@@ -748,11 +848,11 @@ Dentro da GPU, cada pixel passa pela mesma sequência (`shaders/common.js`): cal
 
 **Robustez:** se a GPU perder o contexto (acontece em celulares), todos os recursos são recriados automaticamente. Texturas de mídias sem uso há algum tempo são descartadas para liberar memória.
 
-## 27. Como o editor conversa com a janela do projetor
+## 28. Como o editor conversa com a janela do projetor
 
 ![Comunicação entre a janela do editor e a janela de saída](img/sincronizacao.svg)
 
-*Figura 29 — Mensagens trocadas pelo BroadcastChannel.*
+*Figura 32 — Mensagens trocadas pelo BroadcastChannel.*
 
 As duas janelas são da mesma origem (mesmo site), então usam o **BroadcastChannel**, um canal de mensagens do próprio navegador. Nada passa pela internet.
 
@@ -764,7 +864,7 @@ As duas janelas são da mesma origem (mesmo site), então usam o **BroadcastChan
 
 A janela de saída responde com **hello** ao abrir e com **status** (resolução, tela cheia, fps) a cada segundo — é assim que a barra de status do editor mostra “1 projetor(es) conectado(s)”. Cada janela decodifica os próprios vídeos e os ressincroniza se a diferença passar de 0,35 s.
 
-## 28. Como os dados são guardados
+## 29. Como os dados são guardados
 
 Um projeto é um objeto JSON. Exemplo resumido com uma superfície:
 
@@ -798,19 +898,20 @@ Um projeto é um objeto JSON. Exemplo resumido com uma superfície:
 - **Mídias** aparecem só como referência (`mediaId`). Os arquivos ficam num “depósito” separado do IndexedDB, compartilhado entre projetos.
 - **Banco local (IndexedDB) `luzmap`:** depósito `projects` (projeto + miniatura), depósito `media` (arquivos) e depósito `kv` (diversos). Preferências leves — qualidade, ímã, grade, último projeto — ficam no `localStorage`.
 
-## 29. Testes e ferramentas de desenvolvimento
+## 30. Testes e ferramentas de desenvolvimento
 
 Nada disso é necessário para usar o LuzMap; serve para quem vai modificá-lo.
 
 | Comando | O que faz |
 |---|---|
 | `node tools/serve.mjs` | Servidor local de desenvolvimento em `http://localhost:8080/` |
-| `node --test tests/mapping.test.mjs` | 10 testes da matemática (homografia, triangulação, malha) |
-| `node tests/e2e.mjs` | 61 testes de ponta a ponta no navegador (computador, tablets, celulares emulados de 320 a 412 px, instalação como app) |
+| `node --test tests/mapping.test.mjs` | 12 testes da matemática (homografia, triangulação, malha, sub-quadrilátero) e do catálogo de Natal |
+| `node tests/e2e.mjs` | 70 testes de ponta a ponta no navegador (computador, tablets, celulares emulados de 320 a 412 px, instalação como app, biblioteca de Natal) |
 | `node tools/make-demo-video.mjs` | Gera o vídeo de demonstração a partir do app |
 | `node tools/screenshots.mjs`, `node tools/manual-shots.mjs` | Geram as capturas do README e deste manual |
 | `node tools/make-icons.mjs` | Gera ícones, ícones de atalho e as telas de abertura do iOS |
 | `node tools/make-manual.mjs` | Gera o PDF deste manual a partir do `MANUAL.md` |
+| `node tools/make-christmas.mjs`, `python3 tools/make-christmas-music.py` | Desenham a arte de Natal (vetores → WebP), sintetizam as músicas e geram o catálogo |
 
 A publicação no GitHub Pages é automática a cada envio para a branch `main` (`.github/workflows/pages.yml`).
 
@@ -818,7 +919,7 @@ A publicação no GitHub Pages é automática a cada envio para a branch `main` 
 
 # Parte 5 — Referência rápida
 
-## 30. Atalhos de teclado
+## 31. Atalhos de teclado
 
 | Tecla | Ação |
 |---|---|
@@ -841,13 +942,13 @@ A publicação no GitHub Pages é automática a cada envio para a branch `main` 
 
 Na **janela do projetor**: **F** ou duplo clique = tela cheia, **I** = mostrar informações.
 
-## 31. Solução de problemas
+## 32. Solução de problemas
 
 **A janela do projetor não abriu.** O navegador bloqueou o pop-up. Permita pop-ups para o site (ícone na barra de endereço) ou use **Saída limpa nesta tela**.
 
 **A projeção não ocupa a tela toda do projetor.** Ative a tela cheia na janela de saída (F). Confira se a resolução do projeto é a do projetor. Em **Ajuste**, escolha *esticar* se as proporções forem diferentes.
 
-**A imagem está torta ou não encaixa.** Ajuste os vértices olhando para a parede, com a grade de teste aplicada (capítulo 16). Superfícies curvas pedem **malha**.
+**A imagem está torta ou não encaixa.** Ajuste os vértices olhando para a parede, com a grade de teste aplicada (capítulo 17). Superfícies curvas pedem **malha**.
 
 **Sobra luz na parede ao redor do objeto.** Recue os vértices 1 ou 2 pixels, use **Borda suave** ou crie uma **máscara**.
 
@@ -857,11 +958,11 @@ Na **janela do projetor**: **F** ou duplo clique = tela cheia, **I** = mostrar i
 
 **O vídeo está sem som.** Ligue **Som do vídeo** no painel Conteúdo e toque em ▶ (o navegador exige um toque para liberar o som).
 
-**Está lento.** Escolha o perfil **Baixa** ou **Média**, reduza o tamanho dos vídeos e o número de efeitos pesados simultâneos (capítulo 22).
+**Está lento.** Escolha o perfil **Baixa** ou **Média**, reduza o tamanho dos vídeos e o número de efeitos pesados simultâneos (capítulo 23).
 
 **O GIF não anima.** O navegador não oferece `ImageDecoder`; use Chrome/Edge ou converta o GIF em vídeo.
 
-**No iPhone não fica em tela cheia.** Adicione o site à Tela de Início (capítulo 17).
+**No iPhone não fica em tela cheia.** Adicione o site à Tela de Início (capítulo 18).
 
 **Perdi meu projeto.** Abra **Projetos** — todos os projetos salvos neste navegador estão lá. Se os dados do site foram apagados, só um JSON exportado traz o projeto de volta; por isso exporte cópias de segurança.
 
@@ -871,9 +972,13 @@ Na **janela do projetor**: **F** ou duplo clique = tela cheia, **I** = mostrar i
 
 **Não aparece a opção de instalar.** Use **Menu → Instalar como aplicativo**: o LuzMap mostra o caminho do seu aparelho. No iPhone, a instalação é sempre pelo botão Compartilhar. Se o LuzMap já estiver instalado, a opção some.
 
-**No app instalado do iPhone não aparecem meus projetos.** O app instalado tem armazenamento próprio, separado do Safari. Exporte no Safari (**Exportar com mídias**) e importe no app (capítulo 23).
+**Uma imagem ou música de Natal não carrega.** O primeiro uso de cada item precisa de internet (ele é baixado do site). Depois disso ele fica no aparelho e funciona offline.
 
-## 32. Compatibilidade e limitações
+**Mexi na lareira e o fogo ficou fora do lugar.** O fogo é uma superfície separada (*Fogo da lareira*). Mova-a também, ou apague as duas, posicione uma superfície sobre o móvel, selecione-a e aplique **Lareira virtual**: o fogo é recriado na abertura certa.
+
+**No app instalado do iPhone não aparecem meus projetos.** O app instalado tem armazenamento próprio, separado do Safari. Exporte no Safari (**Exportar com mídias**) e importe no app (capítulo 24).
+
+## 33. Compatibilidade e limitações
 
 | Recurso | Chrome / Edge | Firefox | Safari (Mac) | Safari (iPhone/iPad) |
 |---|---|---|---|---|
@@ -885,6 +990,7 @@ Na **janela do projetor**: **F** ou duplo clique = tela cheia, **I** = mostrar i
 | GIF animado | ✓ | versões recentes | 17+ | 17+ |
 | Instalar como aplicativo | ✓ diálogo do navegador (Android e PC) | Android ✓ · PC ✗ | Adicionar ao Dock | Compartilhar → Tela de Início |
 | Compartilhar para o app | Android ✓ | — | — | — |
+| Biblioteca de Natal (WebP e MP3) | ✓ | ✓ | 14+ | 14+ |
 
 **Limitações conhecidas:**
 
@@ -892,9 +998,10 @@ Na **janela do projetor**: **F** ou duplo clique = tela cheia, **I** = mostrar i
 - abrir janelas e entrar em tela cheia exige um clique (regra de segurança dos navegadores);
 - as mídias não acompanham o JSON, a não ser com **Exportar com mídias**;
 - a calibração é manual — não há câmera nem sensores;
+- cada item da biblioteca de Natal precisa de internet no primeiro uso;
 - a transmissão sem fio pela Presentation API é experimental.
 
-## 33. Glossário
+## 34. Glossário
 
 - **Albedo:** a cor “natural” de uma superfície, usada pela simulação para calcular quanta luz ela reflete.
 - **Blackout:** saída totalmente preta.

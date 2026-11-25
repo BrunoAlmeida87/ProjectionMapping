@@ -268,4 +268,4 @@ link.send({ type: 'hello', id, w: canvas.width, h: canvas.height, kind: isReceiv
 setTimeout(loadStandalone, 1200);
 requestWakeLock();
 showHud();
-window.__luzmapOutput = { get project() { return project; }, transport, renderer, get connected() { return connected; } };
+window.__luzmapOutput = { get project() { return project; }, transport, renderer, media, get connected() { return connected; } };

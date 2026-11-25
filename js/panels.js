@@ -137,12 +137,13 @@ export class EffectsPanel {
     this.renderer = null;
     this.anim = null;
 
-    const presetRow = el('div.preset-row');
-    for (const p of PRESETS) {
-      presetRow.appendChild(
-        el('button.preset', { type: 'button', title: p.desc, onclick: () => app.applyPreset(p.id) }, icon(p.icon), el('span', p.name)),
+    const presetButtons = (list) =>
+      el(
+        'div.preset-row',
+        list.map((p) => el('button.preset', { type: 'button', title: p.desc, onclick: () => app.applyPreset(p.id) }, icon(p.icon), el('span', p.name))),
       );
-    }
+    const presetRow = presetButtons(PRESETS.filter((p) => !p.group));
+    const xmasRow = presetButtons(PRESETS.filter((p) => p.group === 'natal'));
     const chips = el('div.chips', { role: 'tablist' });
     const addChip = (id, name) => {
       const c = el('button.chip', { type: 'button', role: 'tab', onclick: () => this.setCat(id) }, name);
@@ -156,6 +157,8 @@ export class EffectsPanel {
     root.append(
       el('h3.panel-sub', 'Presets prontos'),
       presetRow,
+      el('h3.panel-sub', 'Presets de Natal', el('small.muted', ' — mais imagens e músicas na aba Natal')),
+      xmasRow,
       el('h3.panel-sub', 'Biblioteca de efeitos', el('small.muted', ' — toque para aplicar à superfície selecionada (ou criar uma)')),
       chips,
       this.grid,
@@ -302,7 +305,7 @@ export class MediaPanel {
         el('div.media-thumb', thumb && kind !== 'audio' ? el('img', { src: thumb, alt: '' }) : icon(kind === 'video' ? 'video' : kind === 'audio' ? 'music' : 'image')),
         el(
           'div.media-info',
-          el('span.media-name', meta.name || id),
+          el('span.media-name', meta.name || id, (meta.source || rec?.source || '').startsWith('natal:') ? el('small.tag-natal', ' Natal') : null),
           el('small.muted', [kind === 'gif' ? (item?.frames ? 'GIF animado' : 'GIF') : kind, meta.width ? `${meta.width}×${meta.height}` : '', meta.duration ? formatTime(meta.duration, false) : '', formatBytes(meta.size || rec?.size)].filter(Boolean).join(' · ')),
           missing ? el('small.warn', 'Arquivo ausente — importe novamente') : status === 'error' ? el('small.warn', item?.error || 'Erro ao decodificar') : usedHere ? el('small.ok', 'Usada neste projeto') : null,
         ),

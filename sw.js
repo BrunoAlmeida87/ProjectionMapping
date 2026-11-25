@@ -5,7 +5,7 @@
 // - Share target (Android): files shared to the installed app arrive as a
 //   POST to ./share-target, are parked in a cache and picked up by the app.
 // Large videos and range requests are never cached here.
-const VERSION = 'luzmap-v1.1.0';
+const VERSION = 'luzmap-v1.2.0';
 const SHARE_CACHE = 'luzmap-share';
 const NETWORK_TIMEOUT_MS = 4000;
 const SHELL = [
@@ -19,6 +19,8 @@ const SHELL = [
   './js/backstack.js',
   './js/calibration.js',
   './js/capabilities.js',
+  './js/christmas.js',
+  './js/christmas-catalog.js',
   './js/demo.js',
   './js/editor.js',
   './js/effects.js',
@@ -48,6 +50,44 @@ const SHELL = [
   './assets/icons/icon-512.png',
   './assets/icons/icon-maskable-512.png',
   './assets/icons/apple-touch-icon.png',
+  // Christmas library thumbnails (the full files are cached when first used).
+  // <natal-thumbs> (gerado por tools/make-christmas.mjs)
+  './assets/natal/thumbs/arvore.webp',
+  './assets/natal/thumbs/estrela.webp',
+  './assets/natal/thumbs/estrela-guia.webp',
+  './assets/natal/thumbs/bola-vermelha.webp',
+  './assets/natal/thumbs/bola-dourada.webp',
+  './assets/natal/thumbs/bola-azul.webp',
+  './assets/natal/thumbs/guirlanda.webp',
+  './assets/natal/thumbs/laco.webp',
+  './assets/natal/thumbs/sinos.webp',
+  './assets/natal/thumbs/bengala.webp',
+  './assets/natal/thumbs/presente-vermelho.webp',
+  './assets/natal/thumbs/presente-verde.webp',
+  './assets/natal/thumbs/presentes.webp',
+  './assets/natal/thumbs/boneco-neve.webp',
+  './assets/natal/thumbs/floco.webp',
+  './assets/natal/thumbs/gorro.webp',
+  './assets/natal/thumbs/meia.webp',
+  './assets/natal/thumbs/azevinho.webp',
+  './assets/natal/thumbs/vela.webp',
+  './assets/natal/thumbs/casinha.webp',
+  './assets/natal/thumbs/biscoito.webp',
+  './assets/natal/thumbs/presepio.webp',
+  './assets/natal/thumbs/pisca-pisca.webp',
+  './assets/natal/thumbs/festao.webp',
+  './assets/natal/thumbs/moldura.webp',
+  './assets/natal/thumbs/neve-topo.webp',
+  './assets/natal/thumbs/feliz-natal.webp',
+  './assets/natal/thumbs/boas-festas.webp',
+  './assets/natal/thumbs/feliz-ano-novo.webp',
+  './assets/natal/thumbs/noite-neve.webp',
+  './assets/natal/thumbs/lareira.webp',
+  './assets/natal/thumbs/papel-vermelho.webp',
+  './assets/natal/thumbs/papel-verde.webp',
+  './assets/natal/thumbs/xadrez.webp',
+  './assets/natal/thumbs/flocos-azul.webp',
+  // </natal-thumbs>
 ];
 
 self.addEventListener('install', (event) => {

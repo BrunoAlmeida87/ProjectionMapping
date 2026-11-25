@@ -1,121 +1,121 @@
 {
-  "date": "2026-11-24T19:30:52.632Z",
+  "date": "2026-11-25T18:15:36.436Z",
   "browser": "Chromium (Playwright, headless, SwiftShader)",
   "results": [
     {
       "name": "carrega sem backend, sem erros no console e sem recursos 404",
       "ok": true,
-      "ms": 857
+      "ms": 835
     },
     {
       "name": "todos os caminhos são relativos (funciona sob /ProjectionMapping/)",
       "ok": true,
-      "ms": 72
+      "ms": 3
     },
     {
       "name": "cria superfícies: retângulo, quadrilátero, triângulo, polígono, círculo, elipse, malha e máscara",
       "ok": true,
-      "ms": 2731
+      "ms": 4130
     },
     {
       "name": "arrasta um vértice sem mover os outros",
       "ok": true,
-      "ms": 231
+      "ms": 200
     },
     {
       "name": "ajuste fino por teclado (setas) e campos numéricos",
       "ok": true,
-      "ms": 35
+      "ms": 39
     },
     {
       "name": "desfazer / refazer",
       "ok": true,
-      "ms": 231
+      "ms": 160
     },
     {
       "name": "correção de perspectiva real (homografia): marcadores seguem a projeção",
       "ok": true,
-      "ms": 139
+      "ms": 168
     },
     {
       "name": "máscaras ocultam o que está abaixo (normal e invertida)",
       "ok": true,
-      "ms": 511
+      "ms": 547
     },
     {
       "name": "efeitos animados na GPU (frames diferentes ao longo do tempo) e múltiplas superfícies simultâneas",
       "ok": true,
-      "ms": 1352
+      "ms": 1322
     },
     {
-      "name": "todos os 23 efeitos compilam (WebGL)",
+      "name": "todos os 31 efeitos compilam (WebGL)",
       "ok": true,
-      "ms": 557
+      "ms": 702
     },
     {
       "name": "importa imagem (PNG) e projeta na superfície",
       "ok": true,
-      "ms": 854
+      "ms": 737
     },
     {
       "name": "importa vídeo (WebM) e reproduz em loop sincronizado à timeline",
       "ok": true,
-      "ms": 1490
+      "ms": 1334
     },
     {
       "name": "MP4 H.264: suporte depende do navegador (informado, sem falha silenciosa)",
       "ok": true,
-      "ms": 178
+      "ms": 64
     },
     {
       "name": "importa GIF (animado quando o navegador tem ImageDecoder)",
       "ok": true,
-      "ms": 112
+      "ms": 110
     },
     {
       "name": "salva no IndexedDB e recupera a sessão após recarregar",
       "ok": true,
-      "ms": 1888
+      "ms": 1951
     },
     {
       "name": "exporta e importa projeto em JSON",
       "ok": true,
-      "ms": 806
+      "ms": 1113
     },
     {
       "name": "projeto importado sem a mídia indica que é preciso reimportar",
       "ok": true,
-      "ms": 78
+      "ms": 73
     },
     {
       "name": "janela de saída do projetor abre, sincroniza e não mostra interface",
       "ok": true,
-      "ms": 585
+      "ms": 649
     },
     {
       "name": "saída limpa na mesma tela esconde toda a interface",
       "ok": true,
-      "ms": 771
+      "ms": 828
     },
     {
       "name": "calibração: padrões de teste, contornos e assistente de 6 passos",
       "ok": true,
-      "ms": 1462
+      "ms": 1713
     },
     {
       "name": "modo DEMO executa as 7 cenas residenciais",
       "ok": true,
-      "ms": 3695
+      "ms": 3603
     },
     {
       "name": "grava a saída em vídeo (MediaRecorder) quando suportado",
       "ok": true,
-      "ms": 2106
+      "ms": 1845
     },
     {
       "name": "sai da demo e restaura o projeto anterior",
       "ok": true,
-      "ms": 114
+      "ms": 93
     },
     {
       "name": "sem erros críticos no console durante toda a sessão desktop",
@@ -125,102 +125,147 @@
     {
       "name": "PWA: service worker ativo e app abre offline após o primeiro acesso",
       "ok": true,
-      "ms": 2379
+      "ms": 2375
     },
     {
       "name": "PWA instalável: diagnóstico do Chrome sem erros, manifesto válido e com id",
       "ok": true,
-      "ms": 1669
+      "ms": 1842
     },
     {
       "name": "Manifesto: ícones, capturas, atalhos e telas de abertura do iOS existem",
       "ok": true,
-      "ms": 1790
+      "ms": 2271
     },
     {
       "name": "Compartilhar (Android): arquivos enviados ao app instalado são importados",
       "ok": true,
-      "ms": 2044
+      "ms": 2291
     },
     {
       "name": "Botão voltar fecha janelas e a saída limpa em vez de sair do app",
       "ok": true,
-      "ms": 2807
+      "ms": 3190
     },
     {
       "name": "?new=1 cria projeto novo e limpa a URL; JSON corrompido não quebra o app",
       "ok": true,
-      "ms": 1927
+      "ms": 2190
+    },
+    {
+      "name": "Natal: catálogo completo — todas as imagens, miniaturas e músicas existem e abrem",
+      "ok": true,
+      "ms": 4478
+    },
+    {
+      "name": "Natal: 8 efeitos animados compilam, se movem e os de camada têm fundo transparente",
+      "ok": true,
+      "ms": 1059
+    },
+    {
+      "name": "Natal: imagem da biblioteca vira superfície na proporção certa e o arquivo é reaproveitado",
+      "ok": true,
+      "ms": 648
+    },
+    {
+      "name": "Natal: ✓ aplica textura repetível na superfície selecionada",
+      "ok": true,
+      "ms": 219
+    },
+    {
+      "name": "Natal: música vira trilha sonora sincronizada à timeline",
+      "ok": true,
+      "ms": 181
+    },
+    {
+      "name": "Natal: preset \"Lareira virtual\" na superfície selecionada coloca o fogo dentro da abertura",
+      "ok": true,
+      "ms": 481
+    },
+    {
+      "name": "Natal: ?natal=1 abre o modelo \"Natal na sala\" e a janela do projetor recebe todas as mídias",
+      "ok": true,
+      "ms": 4664
+    },
+    {
+      "name": "Natal: mídia da biblioteca apagada do aparelho é baixada de novo ao reabrir o projeto",
+      "ok": true,
+      "ms": 1888
+    },
+    {
+      "name": "Natal: sem erros no console nem arquivos faltando",
+      "ok": true,
+      "ms": 0
     },
     {
       "name": "Notebook 1366×768: sem sobreposição/rolagem e controles principais visíveis",
       "ok": true,
-      "ms": 410
+      "ms": 579
     },
     {
       "name": "Monitor Full HD 1920×1080: sem sobreposição/rolagem e controles principais visíveis",
       "ok": true,
-      "ms": 415
+      "ms": 498
     },
     {
       "name": "iPad Pro 11 vertical: sem sobreposição/rolagem e controles principais visíveis",
       "ok": true,
-      "ms": 406
+      "ms": 459
     },
     {
       "name": "iPad Pro 11 horizontal: sem sobreposição/rolagem e controles principais visíveis",
       "ok": true,
-      "ms": 474
+      "ms": 519
     },
     {
       "name": "Galaxy Tab S4: sem sobreposição/rolagem e controles principais visíveis",
       "ok": true,
-      "ms": 396
+      "ms": 446
     },
     {
       "name": "iPhone SE (320 px): sem sobreposição/rolagem e controles principais visíveis",
       "ok": true,
-      "ms": 435
+      "ms": 413
     },
     {
       "name": "Galaxy S8 (360 px): sem sobreposição/rolagem e controles principais visíveis",
       "ok": true,
-      "ms": 427
+      "ms": 498
     },
     {
       "name": "layout responsivo sem rolagem horizontal e com controles acessíveis",
       "ok": true,
-      "ms": 88
+      "ms": 37
     },
     {
       "name": "toque seleciona superfície e arrasta o vértice com o dedo",
       "ok": true,
-      "ms": 1731
+      "ms": 1854
     },
     {
       "name": "pinça faz zoom sem editar a geometria",
       "ok": true,
-      "ms": 630
+      "ms": 599
     },
     {
       "name": "painéis deslizantes abrem e fecham",
       "ok": true,
-      "ms": 2441
+      "ms": 3859
     },
     {
       "name": "botão voltar do celular fecha o painel aberto",
       "ok": true,
-      "ms": 764
+      "ms": 763
     },
     {
       "name": "demo funciona no celular",
       "ok": true,
-      "ms": 1691
+      "ms": 1612
     },
     {
       "name": "saída limpa no celular + limitações informadas",
       "ok": true,
-      "ms": 426
+      "ms": 420
     },
     {
       "name": "sem erros no console",
@@ -230,37 +275,37 @@
     {
       "name": "layout responsivo sem rolagem horizontal e com controles acessíveis",
       "ok": true,
-      "ms": 36
+      "ms": 3
     },
     {
       "name": "toque seleciona superfície e arrasta o vértice com o dedo",
       "ok": true,
-      "ms": 1462
+      "ms": 2360
     },
     {
       "name": "pinça faz zoom sem editar a geometria",
       "ok": true,
-      "ms": 665
+      "ms": 749
     },
     {
       "name": "painéis deslizantes abrem e fecham",
       "ok": true,
-      "ms": 2490
+      "ms": 3606
     },
     {
       "name": "botão voltar do celular fecha o painel aberto",
       "ok": true,
-      "ms": 764
+      "ms": 763
     },
     {
       "name": "demo funciona no celular",
       "ok": true,
-      "ms": 1566
+      "ms": 1650
     },
     {
       "name": "saída limpa no celular + limitações informadas",
       "ok": true,
-      "ms": 417
+      "ms": 416
     },
     {
       "name": "sem erros no console",
@@ -270,37 +315,37 @@
     {
       "name": "layout responsivo sem rolagem horizontal e com controles acessíveis",
       "ok": true,
-      "ms": 11
+      "ms": 21
     },
     {
       "name": "toque seleciona superfície e arrasta o vértice com o dedo",
       "ok": true,
-      "ms": 1622
+      "ms": 1929
     },
     {
       "name": "pinça faz zoom sem editar a geometria",
       "ok": true,
-      "ms": 585
+      "ms": 516
     },
     {
       "name": "painéis deslizantes abrem e fecham",
       "ok": true,
-      "ms": 2605
+      "ms": 4158
     },
     {
       "name": "botão voltar do celular fecha o painel aberto",
       "ok": true,
-      "ms": 760
+      "ms": 763
     },
     {
       "name": "demo funciona no celular",
       "ok": true,
-      "ms": 1553
+      "ms": 1723
     },
     {
       "name": "saída limpa no celular + limitações informadas",
       "ok": true,
-      "ms": 417
+      "ms": 411
     },
     {
       "name": "sem erros no console",

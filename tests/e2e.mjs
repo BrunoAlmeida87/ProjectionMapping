@@ -259,7 +259,7 @@ const main = async () => {
     assert(diff >= 3, `apenas ${diff} efeitos mudaram entre t=1 e t=2.3`);
   });
 
-  await test('todos os 23 efeitos compilam (WebGL)', async () => {
+  await test('todos os 31 efeitos compilam (WebGL)', async () => {
     const errs = await page.evaluate(async () => {
       const { Renderer } = await import('./js/renderer.js');
       const c = document.createElement('canvas');
@@ -507,7 +507,7 @@ const main = async () => {
     assert(inst.installabilityErrors.length === 0, `erros de instalação: ${JSON.stringify(inst.installabilityErrors)}`);
     assert(!man.errors || man.errors.length === 0, `erros no manifesto: ${JSON.stringify(man.errors)}`);
     assert(parsed.id && new URL(parsed.id).pathname === BASE, `id do app: ${parsed.id}`);
-    assert(parsed.shareTarget && parsed.shortcuts && parsed.shortcuts.length === 3 && parsed.screenshots.length === 4, `recursos: ${Object.keys(parsed).join(',')}`);
+    assert(parsed.shareTarget && parsed.shortcuts && parsed.shortcuts.length === 4 && parsed.screenshots.length === 4, `recursos: ${Object.keys(parsed).join(',')}`);
     await o.ctx.close();
   });
 
@@ -591,6 +591,222 @@ const main = async () => {
     assert(o.errors.length === 0, o.errors.join(' | '));
     await o.ctx.close();
   });
+
+  // ------------------------------------------------------------------ Natal
+  console.log('\nBiblioteca de Natal');
+  {
+    const o = await openApp(browser);
+    const { page: np } = o;
+
+    await test('Natal: catálogo completo — todas as imagens, miniaturas e músicas existem e abrem', async () => {
+      const res = await np.evaluate(async () => {
+        const { XMAS_ITEMS } = await import('./js/christmas.js');
+        const bad = [];
+        for (const it of XMAS_ITEMS) {
+          const r = await fetch(it.file);
+          if (!r.ok) {
+            bad.push(`${r.status} ${it.file}`);
+            continue;
+          }
+          const blob = await r.blob();
+          if (it.kind === 'image') {
+            const bmp = await createImageBitmap(blob);
+            if (bmp.width !== it.w || bmp.height !== it.h) bad.push(`${it.id}: ${bmp.width}x${bmp.height} ≠ ${it.w}x${it.h}`);
+            const t = await fetch(it.thumb);
+            if (!t.ok) bad.push(`miniatura ${it.thumb}`);
+          } else {
+            const a = new Audio(URL.createObjectURL(blob));
+            await new Promise((ok, fail) => {
+              a.onloadedmetadata = ok;
+              a.onerror = () => fail(new Error(`áudio inválido ${it.file}`));
+            });
+            if (Math.abs(a.duration - it.duration) > 0.6) bad.push(`${it.id}: duração ${a.duration}`);
+          }
+        }
+        return { n: XMAS_ITEMS.length, images: XMAS_ITEMS.filter((i) => i.kind === 'image').length, songs: XMAS_ITEMS.filter((i) => i.kind === 'audio').length, bad };
+      });
+      assert(res.bad.length === 0, res.bad.join(', '));
+      assert(res.images >= 30 && res.songs === 3, JSON.stringify(res));
+      console.log(`      (${res.images} imagens, ${res.songs} músicas)`);
+    });
+
+    await test('Natal: 8 efeitos animados compilam, se movem e os de camada têm fundo transparente', async () => {
+      const res = await np.evaluate(async () => {
+        const { EFFECTS } = await import('./js/effects.js');
+        const { createProject, createSurface, effectContent } = await import('./js/state.js');
+        const { Renderer } = await import('./js/renderer.js');
+        const natal = EFFECTS.filter((e) => e.cat === 'natal');
+        const c = document.createElement('canvas');
+        c.width = 96;
+        c.height = 54;
+        const r = new Renderer(c, { quality: 1, preserveDrawingBuffer: true, antialias: false });
+        const out = {};
+        for (const fx of natal) {
+          const p = createProject({ output: { width: 96, height: 54 } });
+          const params = ['snow', 'snowflakes'].includes(fx.id) ? { amplitude: 0 } : {};
+          p.surfaces.push(createSurface('quad', [[0, 0], [1, 0], [1, 1], [0, 1]], { content: effectContent(fx.id, params) }));
+          const grab = (t) => {
+            r.render({ project: p, t, clock: t, stage: { x: 0, y: 0, w: 96, h: 54 } });
+            const px = new Uint8Array(96 * 54 * 4);
+            r.gl.readPixels(0, 0, 96, 54, r.gl.RGBA, r.gl.UNSIGNED_BYTE, px);
+            return px;
+          };
+          const a = grab(1.3);
+          const b = grab(2.9);
+          let diff = 0;
+          let dark = 0;
+          let lit = 0;
+          for (let i = 0; i < a.length; i += 4) {
+            const s = a[i] + a[i + 1] + a[i + 2];
+            if (Math.abs(s - (b[i] + b[i + 1] + b[i + 2])) > 12) diff++;
+            if (s < 6) dark++;
+            if (s > 120) lit++;
+          }
+          out[fx.id] = { diff, dark, lit };
+        }
+        const errors = [...r.errors.keys()];
+        r.dispose();
+        return { n: natal.length, out, errors };
+      });
+      assert(res.errors.length === 0, `falharam: ${res.errors.join(', ')}`);
+      assert(res.n === 8, `efeitos de Natal: ${res.n}`);
+      for (const [id, v] of Object.entries(res.out)) {
+        assert(v.lit > 20, `${id} não desenhou nada: ${JSON.stringify(v)}`);
+        if (id !== 'candycane' && id !== 'giftwrap') assert(v.diff > 15, `${id} não anima: ${JSON.stringify(v)}`);
+      }
+      for (const id of ['snow', 'xmaslights', 'xmastree', 'glitter', 'snowflakes']) assert(res.out[id].dark > 96 * 54 * 0.25, `${id} deveria ter fundo transparente: ${JSON.stringify(res.out[id])}`);
+    });
+
+    await test('Natal: imagem da biblioteca vira superfície na proporção certa e o arquivo é reaproveitado', async () => {
+      await np.click('[data-tab="natal"]');
+      await np.click('.xmas-card[data-item="arvore"] .xmas-thumb');
+      await np.waitForFunction(() => window.__luzmap.store.surfaces.length === 1, null, { timeout: 15000 });
+      await np.click('.xmas-card[data-item="arvore"] .xmas-thumb');
+      await np.waitForFunction(() => window.__luzmap.store.surfaces.length === 2, null, { timeout: 15000 });
+      const r = await np.evaluate(async () => {
+        const a = window.__luzmap;
+        const [s1, s2] = a.store.surfaces;
+        const { width: W, height: H } = a.store.project.output;
+        const w = (s1.points[1][0] - s1.points[0][0]) * W;
+        const h = (s1.points[3][1] - s1.points[0][1]) * H;
+        const lib = (await a.listLibrary()).filter((x) => x.source === 'natal:arvore');
+        return { same: s1.content.mediaId === s2.content.mediaId, aspect: w / h, lib: lib.length, fit: s1.transform.fit, status: a.media.status(s1.content.mediaId) };
+      });
+      assert(r.same && r.lib === 1, `arquivo duplicado: ${JSON.stringify(r)}`);
+      assert(Math.abs(r.aspect - 768 / 1024) < 0.01, `proporção ${r.aspect}`);
+      assert(r.fit === 'contain' && r.status === 'ready', JSON.stringify(r));
+      const { out } = await samplePixels(np, [[0.5, 0.55], [0.02, 0.02]]);
+      assert(out[0][1] > 60 && out[0][1] > out[0][2], `centro da árvore deveria ser verde: ${out[0]}`);
+      assert(out[1][3] === 0 || out[1][0] + out[1][1] + out[1][2] < 10, `fora da imagem deveria ficar escuro: ${out[1]}`);
+    });
+
+    await test('Natal: ✓ aplica textura repetível na superfície selecionada', async () => {
+      await np.evaluate(() => window.__luzmap.store.select(window.__luzmap.store.surfaces[0].id));
+      await np.click('.chip[data-cat="texturas"]');
+      await np.click('.xmas-card[data-item="xadrez"] .xmas-actions .btn');
+      await np.waitForFunction(() => window.__luzmap.store.selected?.transform.tile === true, null, { timeout: 15000 });
+      const r = await np.evaluate(() => {
+        const a = window.__luzmap;
+        const s = a.store.selected;
+        return { n: a.store.surfaces.length, src: a.store.project.media[s.content.mediaId]?.source, scale: s.transform.scale };
+      });
+      assert(r.n === 2 && r.src === 'natal:xadrez' && r.scale < 1, JSON.stringify(r));
+    });
+
+    await test('Natal: música vira trilha sonora sincronizada à timeline', async () => {
+      await np.click('.chip[data-cat="musicas"]');
+      await np.click('.xmas-card[data-item="noite-feliz"] .btn.primary');
+      await np.waitForFunction(() => !!window.__luzmap.store.project.audio.mediaId, null, { timeout: 15000 });
+      const r = await np.evaluate(() => {
+        const a = window.__luzmap;
+        const id = a.store.project.audio.mediaId;
+        return { src: a.store.project.media[id].source, st: a.media.status(id), dur: a.media.get(id).duration, kind: a.media.get(id).kind };
+      });
+      assert(r.src === 'natal:noite-feliz' && r.st === 'ready' && r.kind === 'audio' && r.dur > 40, JSON.stringify(r));
+    });
+
+    await test('Natal: preset "Lareira virtual" na superfície selecionada coloca o fogo dentro da abertura', async () => {
+      await np.evaluate(async () => {
+        const a = window.__luzmap;
+        a.newProject({ silent: true });
+        const s = a.addDefaultSurface();
+        s.points = [[0.3, 0.1], [0.6, 0.12], [0.62, 0.9], [0.28, 0.92]];
+        a.store.select(s.id);
+        await a.applyPreset('natal-lareira');
+      });
+      const r = await np.evaluate(async () => {
+        const a = window.__luzmap;
+        const { pointInPolygon } = await import('./js/mapping.js');
+        const [img, fire] = a.store.surfaces;
+        return {
+          n: a.store.surfaces.length,
+          img: a.store.project.media[img.content.mediaId]?.source,
+          fire: fire?.content.effect,
+          blend: fire?.blend,
+          inside: fire?.points.every((p) => pointInPolygon(p, img.points)),
+          lowHalf: fire?.points.every((p) => p[1] > 0.5),
+        };
+      });
+      assert(r.n === 2 && r.img === 'natal:lareira' && r.fire === 'fire' && r.blend === 'screen', JSON.stringify(r));
+      assert(r.inside && r.lowHalf, `fogo fora da abertura: ${JSON.stringify(r)}`);
+    });
+
+    await test('Natal: ?natal=1 abre o modelo "Natal na sala" e a janela do projetor recebe todas as mídias', async () => {
+      await np.goto(`http://localhost:${PORT}${BASE}index.html?nosw&natal=1`);
+      await np.waitForFunction(() => window.__luzmap && window.__luzmap.store.project.name === 'Natal na sala', null, { timeout: 20000 });
+      const r = await np.evaluate(() => {
+        const a = window.__luzmap;
+        const p = a.store.project;
+        return {
+          url: location.search.includes('natal'),
+          n: p.surfaces.length,
+          masks: p.surfaces.filter((s) => s.role === 'mask').length,
+          audio: p.media[p.audio.mediaId]?.source,
+          notReady: Object.keys(p.media).filter((id) => a.media.status(id) !== 'ready'),
+          sim: a.view.simulation,
+          dur: p.timeline.duration,
+        };
+      });
+      assert(!r.url, 'parâmetro natal não foi removido da URL');
+      assert(r.n === 14 && r.masks === 3 && r.audio === 'natal:jingle-bells' && r.notReady.length === 0 && r.sim, JSON.stringify(r));
+      const [popup] = await Promise.all([np.waitForEvent('popup'), np.evaluate(() => window.__luzmap.openOutput({ forceWindow: true }))]);
+      await popup.waitForFunction(
+        () => {
+          const o = window.__luzmapOutput;
+          if (!o || !o.project) return false;
+          const ids = o.project.surfaces.filter((s) => s.content.type === 'media').map((s) => s.content.mediaId);
+          return ids.length === 3 && ids.every((id) => o.media.status(id) === 'ready');
+        },
+        null,
+        { timeout: 20000 },
+      );
+      await popup.close();
+    });
+
+    await test('Natal: mídia da biblioteca apagada do aparelho é baixada de novo ao reabrir o projeto', async () => {
+      const id = await np.evaluate(async () => {
+        const a = window.__luzmap;
+        await a.saveNow(false);
+        const { storage } = await import('./js/storage.js');
+        const p = a.store.project;
+        const mid = Object.keys(p.media).find((k) => p.media[k].source === 'natal:lareira');
+        await storage.deleteMedia(mid);
+        return mid;
+      });
+      await np.goto(URL0);
+      await np.waitForFunction((mid) => window.__luzmap && window.__luzmap.store.project.name === 'Natal na sala' && window.__luzmap.media.status(mid) === 'ready', id, { timeout: 20000 });
+      const toasts = await np.evaluate(() => [...document.querySelectorAll('.toast')].map((t) => t.textContent).join(' | '));
+      assert(!/não encontrada|importadas novamente/.test(toasts), `aviso de mídia ausente: ${toasts}`);
+      const back = await np.evaluate(async (mid) => !!(await (await import('./js/storage.js')).storage.getMedia(mid)), id);
+      assert(back, 'mídia recuperada não foi salva de novo no IndexedDB');
+    });
+
+    await test('Natal: sem erros no console nem arquivos faltando', async () => {
+      assert(o.errors.length === 0, o.errors.join(' | '));
+      assert(o.failed.length === 0, o.failed.join(' | '));
+    });
+    await o.ctx.close();
+  }
 
   // ------------------------------------------------------------------ other screen sizes
   console.log('\nNotebook, monitor Full HD e tablets (layout)');
@@ -689,7 +905,7 @@ const main = async () => {
     });
 
     await test('painéis deslizantes abrem e fecham', async () => {
-      for (const s of ['effects', 'props', 'timeline', 'media', 'layers']) {
+      for (const s of ['effects', 'props', 'timeline', 'media', 'natal', 'layers']) {
         await page.tap(`.mobile-tabbar [data-sheet="${s}"]`);
         await page.waitForTimeout(320);
         const open = await page.evaluate((name) => document.body.dataset.sheet === name, s);

@@ -42,6 +42,26 @@ export function squareToQuad(p) {
   return [x1 - x0 + g * x1, x3 - x0 + h * x3, x0, y1 - y0 + g * y1, y3 - y0 + h * y3, y0, g, h, 1];
 }
 
+/**
+ * Quad inside another quad: (u0,v0)-(u1,v1) are fractions of the parent's
+ * unit square, mapped with the parent's homography (perspective-correct).
+ */
+export function subQuad(quad, u0, v0, u1, v1) {
+  const H = squareToQuad(quad);
+  const corners = [
+    [u0, v0],
+    [u1, v0],
+    [u1, v1],
+    [u0, v1],
+  ];
+  if (!H) {
+    const [a, b, c, d] = quad;
+    const lerp2 = (p, q, t) => [p[0] + (q[0] - p[0]) * t, p[1] + (q[1] - p[1]) * t];
+    return corners.map(([u, v]) => lerp2(lerp2(a, b, u), lerp2(d, c, u), v));
+  }
+  return corners.map(([u, v]) => applyH(H, u, v));
+}
+
 /** General homography mapping 4 src points onto 4 dst points (DLT, Gaussian elimination). */
 export function solveHomography(src, dst) {
   const A = [];

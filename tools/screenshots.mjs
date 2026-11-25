@@ -1,5 +1,6 @@
 // Captures the README screenshots from the real app (desktop + mobile).
-// Usage: node tools/screenshots.mjs
+// Usage: node tools/screenshots.mjs [desktop] [effects] [mobile] [natal]
+//        (no argument = everything)
 import path from 'node:path';
 import fs from 'node:fs';
 import { fileURLToPath } from 'node:url';
@@ -12,6 +13,8 @@ fs.mkdirSync(OUT, { recursive: true });
 const server = await startServer({ port: 8212 });
 const browser = await chromium.launch({ args: ['--use-angle=swiftshader', '--enable-unsafe-swiftshader'] });
 const URL0 = 'http://localhost:8212/index.html?nosw';
+const only = process.argv.slice(2);
+const want = (name) => !only.length || only.includes(name);
 
 async function open(ctxOpts) {
   const ctx = await browser.newContext({ deviceScaleFactor: 1, ...ctxOpts });
@@ -37,7 +40,7 @@ const shot = async (page, name) => {
 };
 
 // Desktop — demo in the simulated room
-{
+if (want('desktop')) {
   const { ctx, page } = await open({ viewport: { width: 1440, height: 900 } });
   await page.evaluate(() => window.__luzmap.demo.start());
   await page.evaluate(() => window.__luzmap.seek(43));
@@ -88,7 +91,7 @@ const shot = async (page, name) => {
 }
 
 // Effects library grid (rendered by the app's own renderer)
-{
+if (want('effects')) {
   const { ctx, page } = await open({ viewport: { width: 1200, height: 675 } });
   await page.evaluate(async () => {
     const a = window.__luzmap;
@@ -112,7 +115,7 @@ const shot = async (page, name) => {
 }
 
 // Mobile portrait + landscape
-for (const [name, landscape, setup] of [
+for (const [name, landscape, setup] of !want('mobile') ? [] : [
   ['mobile-portrait-demo.jpg', false, 'demo'],
   ['mobile-portrait-edit.jpg', false, 'edit'],
   ['mobile-landscape.jpg', true, 'effects'],
@@ -139,6 +142,77 @@ for (const [name, landscape, setup] of [
   await settle(page, 1.2);
   await shot(page, name);
   await ctx.close();
+}
+
+// Christmas: template room, library tab, effects and artwork catalogue
+if (want('natal')) {
+  {
+    const { ctx, page } = await open({ viewport: { width: 1440, height: 900 } });
+    await page.evaluate(() => window.__luzmap.openChristmasTemplate());
+    await page.waitForFunction(() => window.__luzmap.store.project.name === 'Natal na sala', null, { timeout: 20000 });
+    await page.waitForTimeout(800);
+    await page.evaluate(() => {
+      const a = window.__luzmap;
+      a.manual = true;
+      a.editor.presentation = true;
+      a.store.select(null);
+      a.showPanel('natal');
+      a.seek(8);
+    });
+    await settle(page, 1.5);
+    await shot(page, 'natal-sala.jpg');
+    await page.evaluate(() => window.__luzmap.seek(44));
+    await settle(page, 1.5);
+    await shot(page, 'natal-sala-2.jpg');
+    await ctx.close();
+  }
+  {
+    const { ctx, page } = await open({ viewport: { width: 1200, height: 675 } });
+    await page.evaluate(async () => {
+      const a = window.__luzmap;
+      const { createProject, createSurface, effectContent } = await import('./js/state.js');
+      const { EFFECTS } = await import('./js/effects.js');
+      const { rectPoints } = await import('./js/mapping.js');
+      const p = createProject({ output: { width: 1920, height: 1080 } });
+      EFFECTS.filter((fx) => fx.cat === 'natal').forEach((fx, i) => {
+        p.surfaces.push(createSurface('quad', rectPoints((i % 4) / 4 + 0.003, Math.floor(i / 4) / 2 + 0.005, 0.25 - 0.006, 0.5 - 0.01), { content: effectContent(fx.id), name: fx.name }));
+      });
+      a.store.setProject(p);
+      a.enterCleanOutput();
+      a.seek(5.5);
+    });
+    await settle(page, 1);
+    await shot(page, 'natal-efeitos.jpg');
+    await ctx.close();
+  }
+  {
+    // Artwork catalogue rendered from the shipped WebP files.
+    const ctx = await browser.newContext({ viewport: { width: 1600, height: 900 }, deviceScaleFactor: 1 });
+    const page = await ctx.newPage();
+    await page.goto('http://localhost:8212/manifest.webmanifest');
+    const { XMAS_ITEMS } = await import('../js/christmas-catalog.js');
+    const cells = XMAS_ITEMS.filter((i) => i.kind === 'image')
+      .map((i) => `<figure class="${i.opaque ? 'op' : ''}"><div><img src="/${i.file}"></div><figcaption>${i.name}</figcaption></figure>`)
+      .join('');
+    await page.setContent(`<html><head><style>
+      body{margin:0;background:#0f1219;font:600 15px Inter,sans-serif;color:#d7dbe6;display:grid;grid-template-columns:repeat(7,1fr);gap:10px;padding:14px}
+      figure{margin:0;background:#171b26;border-radius:10px;overflow:hidden}
+      figure div{height:150px;display:flex;align-items:center;justify-content:center;padding:8px;background:repeating-conic-gradient(#20263a 0 25%,#1a1f2e 0 50%) 0 0/18px 18px}
+      figure.op div{padding:0} figure.op img{width:100%;height:100%;object-fit:cover}
+      img{max-width:100%;max-height:100%} figcaption{padding:7px 9px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+    </style></head><body>${cells}</body></html>`, { waitUntil: 'load' });
+    await page.evaluate(() => Promise.all([...document.images].map((i) => i.decode().catch(() => {}))));
+    await page.screenshot({ path: path.join(OUT, 'natal-arte.jpg'), type: 'jpeg', quality: 84, fullPage: true });
+    console.log('wrote natal-arte.jpg');
+    await ctx.close();
+  }
+  {
+    const { ctx, page } = await open({ ...devices['iPhone 13'], deviceScaleFactor: 2 });
+    await page.tap('.mobile-tabbar [data-sheet="natal"]');
+    await page.waitForTimeout(700);
+    await shot(page, 'natal-celular.jpg');
+    await ctx.close();
+  }
 }
 
 await browser.close();

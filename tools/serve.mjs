@@ -21,6 +21,7 @@ const TYPES = {
   '.webp': 'image/webp',
   '.gif': 'image/gif',
   '.mp4': 'video/mp4',
+  '.mp3': 'audio/mpeg',
   '.webm': 'video/webm',
   '.ico': 'image/x-icon',
   '.txt': 'text/plain; charset=utf-8',

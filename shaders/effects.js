@@ -476,4 +476,366 @@ vec4 effect(vec2 uv) {
 vec4 effect(vec2 uv) {
   return vec4(uColorA * uIntensity, 1.0);
 }`,
+
+  // ------------------------------------------------------------- Natal
+  snow: `
+vec4 effect(vec2 uv) {
+  float t = TT;
+  vec2 p = vec2(uv.x * uAspect, uv.y);
+  float wind = clamp(uDir, -1.2, 1.2);
+  float acc = 0.0;
+  for (int L = 0; L < 4; L++) {
+    float fl = float(L);
+    float cells = (3.2 + fl * 3.4) / uScale;
+    float sp = 0.26 - fl * 0.05;
+    vec2 q = p;
+    q.y -= t * sp;
+    q.x -= t * sp * wind;
+    q *= cells;
+    q.x += sin(q.y * 0.9 + fl * 1.7 + t * 0.7) * 0.3;
+    vec2 id = floor(q);
+    vec2 fr = fract(q) - 0.5;
+    vec2 h = hash22(id + fl * 37.0);
+    float present = step(hash12(id * 1.7 + fl * 5.0), 0.12 + 0.42 * uDensity);
+    vec2 o = (h - 0.5) * 0.5;
+    float r = 0.07 + 0.08 * hash12(id + 3.3);
+    float d = length(fr - o);
+    float flake = smoothstep(r, r * 0.2, d) * present;
+    flake += smoothstep(r * 2.6, 0.0, d) * 0.18 * present;
+    acc = max(acc, clamp(flake, 0.0, 1.0) * (1.0 - fl * 0.16));
+  }
+  float bgA = clamp(uAmp, 0.0, 1.0);
+  vec3 bg = mix(uColorB * 0.45, uColorB * 1.3, uv.y);
+  vec3 C = uColorA * acc + bg * bgA * (1.0 - acc);
+  float A = acc + bgA * (1.0 - acc);
+  return vec4(C / max(A, 0.001) * INTEN, A);
+}`,
+
+  xmaslights: `
+vec3 xmasPal(float h) {
+  if (h < 0.2) return vec3(1.0, 0.16, 0.18);
+  if (h < 0.4) return vec3(0.18, 1.0, 0.38);
+  if (h < 0.6) return vec3(1.0, 0.8, 0.22);
+  if (h < 0.8) return vec3(0.28, 0.55, 1.0);
+  return vec3(1.0, 0.38, 0.85);
+}
+vec4 effect(vec2 uv) {
+  float t = TT;
+  vec2 p = vec2(uv.x * uAspect, uv.y);
+  float rows = clamp(floor(2.0 * uFreq + 0.5), 1.0, 6.0);
+  float rowH = 1.0 / rows;
+  float spacing = rowH * 0.42 / max(uDensity, 0.15);
+  float P = spacing * 6.0;
+  float sag = rowH * 0.3 * uAmp;
+  float br = rowH * 0.07 * uScale;
+  float lw = max(rowH * 0.012, 0.0015);
+  vec3 C = vec3(0.0);
+  float A = 0.0;
+  float r0 = floor(uv.y / rowH);
+  for (int dr = -1; dr <= 1; dr++) {
+    float ri = r0 + float(dr);
+    if (ri < 0.0 || ri > rows - 1.0) continue;
+    float top = ri * rowH + rowH * 0.1;
+    float sw = fract(p.x / P);
+    float yw = top + sag * 4.0 * sw * (1.0 - sw);
+    float slope = sag * 4.0 * (1.0 - 2.0 * sw) / P;
+    float dWire = abs(p.y - yw) / sqrt(1.0 + slope * slope);
+    float wa = smoothstep(lw, lw * 0.3, dWire) * 0.9;
+    C = uColorA * wa + C * (1.0 - wa);
+    A = wa + A * (1.0 - wa);
+    float i0 = floor(p.x / spacing);
+    for (int k = -1; k <= 1; k++) {
+      float i = i0 + float(k);
+      float xc = (i + 0.5) * spacing;
+      float s2 = fract(xc / P);
+      float yc = top + sag * 4.0 * s2 * (1.0 - s2);
+      vec2 v = p - vec2(xc, yc + br * 1.9);
+      float h = hash12(vec2(i, ri * 7.0 + 1.0));
+      vec3 bc = xmasPal(h);
+      float tw = 0.5 + 0.5 * sin(t * (1.0 + 1.6 * hash11(i * 3.7 + ri)) + h * 31.0 - i * 0.45);
+      float bright = 0.18 + 0.82 * smoothstep(0.15, 0.95, tw);
+      float g = exp(-dot(v, v) / (br * br * 7.0)) * 0.75 * bright;
+      C = bc * g + C * (1.0 - g);
+      A = g + A * (1.0 - g);
+      vec2 vb = vec2(v.x, v.y / 1.5);
+      float bulb = smoothstep(br, br * 0.8, length(vb));
+      vec3 glass = mix(bc * (0.35 + 0.65 * bright), vec3(1.0), 0.45 * bright * smoothstep(br, 0.0, length(vb - vec2(-br * 0.3, -br * 0.5))));
+      C = glass * bulb + C * (1.0 - bulb);
+      A = bulb + A * (1.0 - bulb);
+      vec2 vs = p - vec2(xc, yc + br * 0.45);
+      float sock = step(abs(vs.x), br * 0.42) * step(abs(vs.y), br * 0.5);
+      C = uColorA * 1.4 * sock + C * (1.0 - sock);
+      A = sock + A * (1.0 - sock);
+    }
+  }
+  return vec4(C / max(A, 0.001) * INTEN, A);
+}`,
+
+  candycane: `
+vec4 effect(vec2 uv) {
+  float t = TT;
+  vec2 p = vec2(uv.x * uAspect, uv.y);
+  vec2 d = vec2(cos(uDir), sin(uDir));
+  float s = dot(p, d) * 5.0 / uScale + t * 0.5;
+  float f = fract(s);
+  float e = 7.5 / (uScale * max(uSizePx.y, 1.0)) + 0.004;
+  float wide = smoothstep(0.0, e, f) * (1.0 - smoothstep(0.42, 0.42 + e, f));
+  float tw = 0.07 * clamp(uAmp, 0.0, 2.0);
+  float thin = smoothstep(0.6 - tw, 0.6 - tw + e, f) * (1.0 - smoothstep(0.6 + tw, 0.6 + tw + e, f));
+  vec3 col = mix(uColorB, uColorA, max(wide, thin * step(0.01, uAmp)));
+  float shade = 0.78 + 0.22 * sin(uv.x * PI);
+  float sheen = pow(1.0 - abs(fract(uv.x * 0.5 + uv.y * 0.2 - t * 0.12) - 0.5) * 2.0, 14.0);
+  col = col * shade + vec3(sheen * 0.35);
+  return vec4(col * INTEN, 1.0);
+}`,
+
+  giftwrap: `
+vec4 effect(vec2 uv) {
+  float t = TT;
+  vec2 p = vec2(uv.x * uAspect, uv.y);
+  float m = min(uAspect, 1.0);
+  vec2 g = p * 7.0 / uScale;
+  vec2 gid = floor(g);
+  vec2 gf = fract(g) - 0.5;
+  float odd = mod(gid.x + gid.y, 2.0);
+  float ang = atan(gf.y, gf.x);
+  float k = 0.5 + 0.5 * cos(5.0 * (ang + PI * 0.5));
+  float starR = mix(0.09, 0.22, pow(k, 3.0));
+  float motif = odd > 0.5 ? smoothstep(starR + 0.02, starR - 0.02, length(gf)) : smoothstep(0.07, 0.05, length(gf));
+  vec3 paper = uColorA * (0.92 + 0.08 * sin(p.x * 40.0 + p.y * 40.0));
+  vec3 col = mix(paper, mix(uColorB, vec3(1.0), 0.25), motif * (odd > 0.5 ? 0.9 : 0.6));
+  vec2 c = vec2(uAspect * 0.5, 0.5);
+  vec2 v = p - c;
+  float w = 0.085 * m * uAmp;
+  float bv = smoothstep(w, w - 0.004, abs(v.x));
+  float bh = smoothstep(w, w - 0.004, abs(v.y));
+  float sat = 0.75 + 0.25 * cos((bv > bh ? v.x : v.y) / max(w, 0.001) * 2.6);
+  float shim = pow(0.5 + 0.5 * sin((uv.x + uv.y) * 9.0 - t * 2.2), 16.0);
+  vec3 rib = uColorB * sat + vec3(shim * 0.6);
+  col = mix(col, rib * 0.82, max(bv, bh) * 0.25);
+  col = mix(col, rib, max(bv, bh));
+  // bow at the crossing (tails, two loops and the knot)
+  float bs = m * uAmp * step(0.05, uAmp);
+  if (bs > 0.0) {
+    for (int i = 0; i < 2; i++) {
+      float sx = i == 0 ? -1.0 : 1.0;
+      vec2 ta = vec2(0.0, 0.01) * bs;
+      vec2 tb = vec2(sx * 0.11, 0.2) * bs;
+      vec2 pa = v - ta;
+      vec2 ba = tb - ta;
+      float hh = clamp(dot(pa, ba) / dot(ba, ba), 0.0, 1.0);
+      float dT = length(pa - ba * hh);
+      float tail = smoothstep(0.03 * bs, 0.026 * bs, dT);
+      col = mix(col, uColorB * (0.95 - hh * 0.35) + vec3(shim * 0.3), tail);
+    }
+    for (int i = 0; i < 2; i++) {
+      float sx = i == 0 ? -1.0 : 1.0;
+      vec2 q = rot(v - vec2(sx * 0.115, -0.045) * bs, sx * 0.42);
+      vec2 e1 = q / (vec2(0.14, 0.075) * bs);
+      float loopA = smoothstep(1.0, 0.93, length(e1));
+      float outer = clamp(e1.x * sx * 0.5 + 0.5, 0.0, 1.0);
+      vec3 lc = uColorB * (0.62 + 0.5 * outer - 0.18 * e1.y) + vec3(shim * 0.35);
+      vec2 e2 = (q - vec2(sx * 0.03, -0.004) * bs) / (vec2(0.075, 0.03) * bs);
+      float hole = smoothstep(1.0, 0.75, length(e2));
+      lc = mix(lc, uColorB * 0.32, hole);
+      col = mix(col, lc, loopA);
+    }
+    float kd = length(v * vec2(1.0, 0.85));
+    float knot = smoothstep(0.048 * bs, 0.043 * bs, kd);
+    col = mix(col, uColorB * (1.05 - 6.0 * v.y / bs) * 0.85 + vec3(0.25) * smoothstep(0.03 * bs, 0.0, length(v + vec2(0.012, 0.014) * bs)), knot);
+  }
+  // sparkles
+  vec2 sg = p * 9.0 * uDensity;
+  vec2 sid = floor(sg);
+  vec2 sf = fract(sg) - 0.5 - (hash22(sid) - 0.5) * 0.6;
+  float life = pow(max(0.0, sin(t * (1.0 + hash12(sid)) * 1.5 + hash12(sid + 9.0) * TAU)), 12.0);
+  float cr = exp(-abs(sf.x) * 60.0) * exp(-abs(sf.y) * 9.0) + exp(-abs(sf.y) * 60.0) * exp(-abs(sf.x) * 9.0);
+  col += vec3(1.0, 0.95, 0.8) * cr * life * step(0.7, hash12(sid + 4.0)) * step(0.01, uDensity);
+  return vec4(col * INTEN, 1.0);
+}`,
+
+  xmasnight: `
+vec4 effect(vec2 uv) {
+  float t = TT;
+  vec2 p = vec2(uv.x * uAspect, uv.y);
+  vec3 col = mix(uColorB * 0.3, uColorB * 1.15, smoothstep(0.0, 1.0, uv.y));
+  for (int L = 0; L < 2; L++) {
+    float fl = float(L);
+    vec2 g = p * (16.0 + fl * 18.0) * uDensity;
+    vec2 id = floor(g);
+    vec2 f = fract(g) - 0.5;
+    float h = hash12(id + fl * 21.0);
+    vec2 o = (hash22(id + fl * 3.0) - 0.5) * 0.7;
+    float d = length(f - o);
+    float tw = 0.55 + 0.45 * sin(t * (1.5 + h * 4.0) + h * 40.0);
+    float s = smoothstep(0.09 - fl * 0.03, 0.0, d) * step(0.72, h) * tw;
+    col += vec3(0.85, 0.9, 1.0) * s * (1.2 - fl * 0.4);
+  }
+  vec2 sp = vec2(uAspect * 0.72, 0.2);
+  vec2 v = p - sp;
+  float dd = length(v);
+  float pulse = 0.85 + 0.15 * sin(t * 2.0);
+  float rays = exp(-abs(v.x) * 260.0) * exp(-abs(v.y) * 7.0) + exp(-abs(v.y) * 260.0) * exp(-abs(v.x) * 12.0);
+  vec2 v45 = rot(v, 0.785);
+  rays += 0.5 * (exp(-abs(v45.x) * 300.0) * exp(-abs(v45.y) * 22.0) + exp(-abs(v45.y) * 300.0) * exp(-abs(v45.x) * 22.0));
+  float tail = exp(-abs(v.x) * 140.0) * smoothstep(0.0, 0.03, v.y) * exp(-v.y * 2.2) * 0.8;
+  col += uColorA * (exp(-dd * dd * 2500.0) * 2.5 + 0.012 / (dd + 0.015) + rays * 0.9 + tail) * pulse;
+  float period = 5.0;
+  float k = floor(t / period);
+  float ph = fract(t / period);
+  vec2 st0 = vec2(hash11(k * 1.3) * uAspect * 0.8 + uAspect * 0.1, hash11(k * 2.1) * 0.35);
+  vec2 dir = normalize(vec2(-0.85, 0.45));
+  vec2 head = st0 + dir * ph * 0.9;
+  vec2 rel = p - head;
+  float along = dot(rel, -dir);
+  float perp = abs(dot(rel, vec2(-dir.y, dir.x)));
+  float trail = smoothstep(0.0, 0.004, along + 0.004) * exp(-along * 9.0) * exp(-perp * 900.0);
+  float fade = smoothstep(0.0, 0.1, ph) * smoothstep(0.55, 0.3, ph);
+  col += vec3(1.0, 0.97, 0.9) * trail * fade * 1.6;
+  if (uAmp > 0.01) {
+    float hy = 1.0 - 0.13 * uAmp + 0.035 * sin(uv.x * 7.0 + 1.0) + 0.02 * sin(uv.x * 17.0);
+    float hill = smoothstep(hy - 0.004, hy + 0.004, uv.y);
+    vec3 snowc = mix(vec3(0.72, 0.8, 0.95), vec3(0.9, 0.94, 1.0), smoothstep(hy, 1.0, uv.y)) * 0.75;
+    col = mix(col, snowc, hill);
+  }
+  return vec4(col * INTEN, 1.0);
+}`,
+
+  snowflakes: `
+float sdSegX(vec2 p, vec2 a, vec2 b) {
+  vec2 pa = p - a; vec2 ba = b - a;
+  float h = clamp(dot(pa, ba) / dot(ba, ba), 0.0, 1.0);
+  return length(pa - ba * h);
+}
+float flakeSDF(vec2 v, float R) {
+  float r = length(v);
+  float a = atan(v.y, v.x);
+  a = mod(a + PI / 6.0, PI / 3.0) - PI / 6.0;
+  a = abs(a);
+  vec2 q = r * vec2(cos(a), sin(a));
+  float d = sdSegX(q, vec2(0.0), vec2(R, 0.0));
+  d = min(d, sdSegX(q, vec2(R * 0.32, 0.0), vec2(R * 0.47, R * 0.26)));
+  d = min(d, sdSegX(q, vec2(R * 0.58, 0.0), vec2(R * 0.7, R * 0.2)));
+  d = min(d, sdSegX(q, vec2(R * 0.8, 0.0), vec2(R * 0.87, R * 0.12)));
+  d = min(d, abs(r - R * 0.15));
+  return d;
+}
+vec4 effect(vec2 uv) {
+  float t = TT;
+  vec2 p = vec2(uv.x * uAspect, uv.y);
+  float acc = 0.0;
+  float glow = 0.0;
+  for (int L = 0; L < 2; L++) {
+    float fl = float(L);
+    float cells = (2.2 + fl * 2.0) / uScale;
+    vec2 q = p;
+    q.y -= t * (0.04 + fl * 0.03);
+    q.x += sin(t * 0.3 + fl) * 0.03;
+    q *= cells;
+    vec2 id = floor(q);
+    vec2 f = fract(q) - 0.5;
+    float h = hash12(id + fl * 13.0);
+    float present = step(hash12(id * 2.3 + fl), 0.25 + 0.5 * uDensity);
+    float R = 0.3 + 0.1 * h;
+    vec2 v = rot(f - (hash22(id) - 0.5) * 0.12, t * (h - 0.5) * 0.8 + h * 6.0);
+    float d = flakeSDF(v, R);
+    float w = 0.022 + 0.01 * fl;
+    acc = max(acc, smoothstep(w, w * 0.35, d) * present * (1.0 - fl * 0.25));
+    glow = max(glow, exp(-d * 28.0) * 0.45 * present * smoothstep(0.5, 0.35, length(f)));
+  }
+  float a = max(acc, glow);
+  vec3 fc = mix(uColorA, vec3(1.0), acc * 0.5);
+  float bgA = clamp(uAmp, 0.0, 1.0);
+  vec3 bg = mix(uColorB * 0.5, uColorB * 1.2, uv.y);
+  vec3 C = fc * a + bg * bgA * (1.0 - a);
+  float A = a + bgA * (1.0 - a);
+  return vec4(C / max(A, 0.001) * INTEN, A);
+}`,
+
+  xmastree: `
+vec3 treePal(float h) {
+  if (h < 0.25) return vec3(1.0, 0.2, 0.22);
+  if (h < 0.5) return vec3(0.3, 0.6, 1.0);
+  if (h < 0.75) return vec3(1.0, 0.45, 0.85);
+  return vec3(1.0, 0.85, 0.35);
+}
+vec4 effect(vec2 uv) {
+  float t = TT;
+  vec2 p = vec2(uv.x * uAspect, uv.y);
+  float cx = uAspect * 0.5;
+  float top = 0.12;
+  float base = 0.93;
+  float halfB = min(0.36, uAspect * 0.46);
+  float yy = (uv.y - top) / (base - top);
+  vec3 C = vec3(0.0);
+  float A = 0.0;
+  float wy = halfB * clamp(yy, 0.0, 1.0);
+  float u = (p.x - cx) / max(wy, 0.0001);
+  float inside = step(0.0, yy) * step(yy, 1.0) * step(abs(u), 1.0);
+  float edge = smoothstep(1.0, 0.94, abs(u)) * inside;
+  float fill = edge * 0.38 * clamp(uAmp, 0.0, 2.0) * (0.6 + 0.4 * yy);
+  C = uColorB * fill;
+  A = fill;
+  float turns = 5.0 * uFreq;
+  if (inside > 0.5) {
+    float th = asin(clamp(u, -1.0, 1.0));
+    for (int side = 0; side < 2; side++) {
+      float front = side == 0 ? 1.0 : 0.0;
+      float ang = side == 0 ? th : PI - th;
+      for (int strand = 0; strand < 2; strand++) {
+        float off = float(strand) * 0.5;
+        float ph = yy * turns + ang / TAU + off - t * 0.08;
+        float dl = abs(fract(ph) - 0.5);
+        float lineW = 0.018 + 0.012 * front;
+        float ln = smoothstep(lineW, lineW * 0.2, dl) * (0.25 + 0.75 * front);
+        float n = floor(ph) + off * 13.0;
+        float bead = fract((ang / TAU + 1.0) * (10.0 + yy * 18.0) * uDensity);
+        float bid = floor((ang / TAU + 1.0) * (10.0 + yy * 18.0) * uDensity) + n * 57.0;
+        float tw = 0.5 + 0.5 * sin(t * 3.0 - bid * 0.7 + yy * 8.0);
+        float dot2 = smoothstep(0.32, 0.0, abs(bead - 0.5)) * smoothstep(lineW * 1.8, 0.0, dl);
+        vec3 lc = strand == 0 ? uColorA : treePal(hash11(bid));
+        float g = clamp(ln * 0.55 + dot2 * (0.5 + 0.9 * tw), 0.0, 1.0) * (0.3 + 0.7 * front);
+        C = lc * g + C * (1.0 - g);
+        A = g + A * (1.0 - g);
+      }
+    }
+  }
+  vec2 sp = vec2(cx, top - 0.01);
+  vec2 v = p - sp;
+  float ang5 = atan(v.x, -v.y);
+  float k = 0.5 + 0.5 * cos(5.0 * ang5);
+  float sr = mix(0.022, 0.06, pow(k, 4.0)) * (0.92 + 0.08 * sin(t * 3.0));
+  float star = smoothstep(sr, sr * 0.8, length(v));
+  float sg = exp(-length(v) * 22.0) * 0.8;
+  vec3 starC = vec3(1.0, 0.86, 0.4);
+  C = starC * sg + C * (1.0 - sg);
+  A = sg + A * (1.0 - sg);
+  C = mix(C, vec3(1.0, 0.95, 0.7), star);
+  A = max(A, star);
+  return vec4(C / max(A, 0.001) * INTEN, A);
+}`,
+
+  glitter: `
+vec4 effect(vec2 uv) {
+  float t = TT;
+  vec2 p = vec2(uv.x * uAspect, uv.y);
+  vec3 C = vec3(0.0);
+  float A = 0.0;
+  for (int L = 0; L < 3; L++) {
+    float fl = float(L);
+    vec2 g = p * (5.0 + fl * 5.0) * uDensity / uScale;
+    vec2 id = floor(g);
+    vec2 f = fract(g) - 0.5 - (hash22(id + fl * 7.0) - 0.5) * 0.6;
+    float h = hash12(id + fl * 19.0);
+    float life = pow(max(0.0, sin(t * (0.8 + h * 1.6) + h * TAU)), 6.0);
+    float sz = 1.0 + fl * 0.6;
+    float cr = exp(-abs(f.x) * 70.0 * sz) * exp(-abs(f.y) * 8.0 * sz) + exp(-abs(f.y) * 70.0 * sz) * exp(-abs(f.x) * 8.0 * sz);
+    float core = exp(-dot(f, f) * 900.0 * sz);
+    float s = clamp((cr * 0.9 + core) * life, 0.0, 1.0);
+    vec3 c = mix(uColorA, uColorB, step(0.6, hash12(id + 2.0)));
+    C = c * s + C * (1.0 - s);
+    A = s + A * (1.0 - s);
+  }
+  return vec4(C / max(A, 0.001) * INTEN, A);
+}`,
 };

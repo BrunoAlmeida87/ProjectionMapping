@@ -14,7 +14,7 @@ const MANUAL_DIR = path.join(ROOT, 'docs', 'manual');
 const SRC = path.join(MANUAL_DIR, 'MANUAL.md');
 const OUT = path.join(MANUAL_DIR, 'Manual-LuzMap.pdf');
 const tmp = fs.mkdtempSync(path.join(os.tmpdir(), 'luzmap-manual-'));
-const VERSION = '1.1';
+const VERSION = '1.2';
 const DATE = 'Novembro de 2026';
 
 // ---------------------------------------------------------------- Markdown -> HTML

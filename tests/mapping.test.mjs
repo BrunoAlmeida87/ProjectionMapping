@@ -16,8 +16,11 @@ import {
   pointInPolygon,
   signedArea,
   transformPoints,
+  subQuad,
   UV_SQUARE,
 } from '../js/mapping.js';
+import fs from 'node:fs';
+import { XMAS_ITEMS } from '../js/christmas-catalog.js';
 
 const close = (a, b, eps = 1e-9) => assert.ok(Math.abs(a - b) < eps, `${a} != ${b}`);
 
@@ -177,4 +180,38 @@ test('polygon geometry uses planar UVs and keeps outline for feathering', () => 
   assert.equal(g.count, 9);
   assert.equal(g.shape, 3);
   assert.equal(g.poly.length, 5);
+});
+
+test('subQuad follows the parent perspective (fire inside a fireplace image)', () => {
+  const quad = [
+    [0.1, 0.1],
+    [0.8, 0.2],
+    [0.75, 0.95],
+    [0.2, 0.8],
+  ];
+  const full = subQuad(quad, 0, 0, 1, 1);
+  full.forEach((p, i) => {
+    assert.ok(Math.abs(p[0] - quad[i][0]) < 1e-9 && Math.abs(p[1] - quad[i][1]) < 1e-9);
+  });
+  const H = squareToQuad(quad);
+  const part = subQuad(quad, 0.25, 0.5, 0.75, 0.9);
+  const want = applyH(H, 0.75, 0.9);
+  assert.ok(Math.abs(part[2][0] - want[0]) < 1e-9 && Math.abs(part[2][1] - want[1]) < 1e-9);
+  part.forEach((p) => assert.ok(pointInPolygon(p, quad)));
+});
+
+test('Christmas catalog: every file exists with the declared size', () => {
+  assert.ok(XMAS_ITEMS.length >= 33);
+  const ids = new Set();
+  for (const it of XMAS_ITEMS) {
+    assert.ok(!ids.has(it.id), `id repetido ${it.id}`);
+    ids.add(it.id);
+    const url = new URL(`../${it.file}`, import.meta.url);
+    assert.ok(fs.existsSync(url), `faltando ${it.file}`);
+    assert.equal(fs.statSync(url).size, it.bytes, `tamanho de ${it.file}`);
+    if (it.kind === 'image') {
+      assert.ok(fs.existsSync(new URL(`../${it.thumb}`, import.meta.url)), `faltando ${it.thumb}`);
+      assert.ok(it.w > 0 && it.h > 0 && it.size > 0);
+    } else assert.ok(it.duration > 30 && /domínio público/.test(it.credit));
+  }
 });

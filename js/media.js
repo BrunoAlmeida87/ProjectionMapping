@@ -29,6 +29,9 @@ export class MediaManager extends Emitter {
     this.supportsRVFC = typeof HTMLVideoElement !== 'undefined' && 'requestVideoFrameCallback' in HTMLVideoElement.prototype;
     this.audioUnlocked = false;
     this.audioEngine = null;
+    // Optional hook: (id) => Promise<{ blob, info } | null>. Lets the app re-download
+    // built-in library media (e.g. the Christmas pack) that is missing on this device.
+    this.recover = null;
   }
 
   registerBuiltin(key, source) {
@@ -53,11 +56,12 @@ export class MediaManager extends Emitter {
   }
 
   /** Imports a File, stores it locally and returns the project-level metadata. */
-  async importFile(file) {
+  async importFile(file, { source = null } = {}) {
     const kind = mediaKind(file);
     if (!kind) throw new Error(`Formato não suportado: ${file.name}`);
     const id = uid('m');
     const rec = { id, name: file.name, kind, mime: file.type, size: file.size, blob: file, createdAt: Date.now() };
+    if (source) rec.source = source;
     let stored = true;
     try {
       await storage.putMedia(rec);
@@ -66,7 +70,7 @@ export class MediaManager extends Emitter {
       console.warn('Mídia mantida apenas na memória:', err);
       this.emit('warning', err.code === 'quota' ? err.message : 'Não foi possível salvar a mídia no navegador; ela ficará disponível só nesta sessão.');
     }
-    const item = await this._createItem(id, file, { name: file.name, kind, mime: file.type, size: file.size });
+    const item = await this._createItem(id, file, { name: file.name, kind, mime: file.type, size: file.size, source });
     item.stored = stored;
     return this.meta(id);
   }
@@ -85,6 +89,7 @@ export class MediaManager extends Emitter {
     try {
       const rec = await storage.getMedia(id);
       if (!rec || !rec.blob) {
+        if (await this._recover(id)) return true;
         this.items.set(id, { id, status: 'missing' });
         this.emit('change', id);
         return false;
@@ -99,10 +104,24 @@ export class MediaManager extends Emitter {
     }
   }
 
+  async _recover(id) {
+    if (!this.recover) return false;
+    let got = null;
+    try {
+      got = await this.recover(id);
+    } catch (err) {
+      console.warn('Não foi possível recuperar a mídia da biblioteca', id, err);
+    }
+    if (!got || !got.blob) return false;
+    await storage.putMedia({ id, ...got.info, blob: got.blob, createdAt: Date.now() }).catch(() => {});
+    const item = await this._createItem(id, got.blob, got.info);
+    return item.status === 'ready';
+  }
+
   meta(id) {
     const it = this.items.get(id);
     if (!it) return null;
-    return {
+    const out = {
       id,
       name: it.name,
       kind: it.kind,
@@ -113,6 +132,8 @@ export class MediaManager extends Emitter {
       duration: it.duration || 0,
       animated: !!(it.frames && it.frames.length > 1),
     };
+    if (it.source) out.source = it.source;
+    return out;
   }
 
   async _createItem(id, blob, info) {
@@ -129,6 +150,7 @@ export class MediaManager extends Emitter {
       status: 'loading',
       version: 1,
       thumb: null,
+      source: info.source || null,
     };
     this.items.set(id, item);
     try {
